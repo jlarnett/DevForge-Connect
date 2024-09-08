@@ -1,4 +1,8 @@
 using DevForge_Connect.Data;
+using DevForge_Connect.SendGrid;
+using DevForge_Connect.SendGrid.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using DevForge_Connect.Entities.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +17,17 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+//Send Grid service setup
+builder.Services.Configure<SendGridEmailSenderOptions>(options =>
+{
+    // Gets sendgrid secrets from azure key config / azure key vault. 
+    options.ApiKey = builder.Configuration["SendGrid:ApiKey"]!;
+    options.SenderEmail = builder.Configuration["SendGrid:SenderEmail"]!;
+    options.SenderName = "DevForge_Connect";
+});
+
+builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
 
 var app = builder.Build();
 
