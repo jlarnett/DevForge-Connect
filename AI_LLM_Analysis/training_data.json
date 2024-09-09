@@ -1,0 +1,55 @@
+{
+    "training_data": [
+      {
+        "text": "I want to build an app that stores customer recipes to be accessed by everyone.",
+        "cats": {
+          "STORAGE": 1,
+          "AUTHENTICATION": 0,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0
+        }
+      },
+      {
+        "text": "We need to develop a new feature for user authentication.",
+        "cats": {
+          "STORAGE": 0,
+          "AUTHENTICATION": 1,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0
+        }
+      },
+      {
+        "text": "Our project needs to analyze large datasets.",
+        "cats": {
+          "STORAGE": 0,
+          "AUTHENTICATION": 0,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0
+        }
+      },
+      {
+        "text": "We are planning to implement a chat feature.",
+        "cats": {
+          "STORAGE": 0,
+          "AUTHENTICATION": 0,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 0
+        }
+      },
+      {
+        "text": "I need to create a responsive web application.",
+        "cats": {
+          "STORAGE": 0,
+          "AUTHENTICATION": 0,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 1
+        }
+      }
+    ]
+  }
+  
