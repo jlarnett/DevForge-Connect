@@ -1,4 +1,5 @@
-﻿using DevForge_Connect.Entities.Identity;
+﻿using DevForge_Connect.Entities;
+using DevForge_Connect.Entities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,5 +11,7 @@ namespace DevForge_Connect.Data
             : base(options)
         {
         }
+
+        public DbSet<ProjectSubmission> ProjectSubmissions { get; set; }
     }
 }
