@@ -1,0 +1,13 @@
+{
+  "labels":[
+    "STORAGE",
+    "AI",
+    "DATA_ANALYSIS",
+    "COMMUNICATION",
+    "WEB_DEVELOPMENT",
+    "GAME_DEVELOPMENT",
+    "MOBILE_DEVELOPMENT",
+    "IOT"
+  ],
+  "threshold":0.5
+}

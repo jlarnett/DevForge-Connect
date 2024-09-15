@@ -19,7 +19,7 @@
             "name": "Python: SpaCy Testing",  // New configuration for SpaCy
             "type": "debugpy",
             "request": "launch",
-            "program": "AI_LLM_ANALYSIS/spNlp.py",  // Path to your SpaCy script
+            "program": "AI_LLM_ANALYSIS/nlp_training.py",  // Path to your SpaCy script
             "console": "integratedTerminal",  // You can use "integratedTerminal" or "externalTerminal"
             "args": []  // Add any arguments you need for your script
         }
