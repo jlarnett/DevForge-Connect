@@ -1,7 +1,7 @@
 from typing import Union
-from AI_LLM_Analysis.textGen import generate_response
+from textGen import generate_response
 from fastapi import FastAPI
-from AI_LLM_Analysis.predict_from_model import spacy_prediction
+from predict_from_model import spacy_prediction
 
 app = FastAPI()
 
