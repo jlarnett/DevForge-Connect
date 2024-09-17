@@ -4,10 +4,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Project Information</h1>
 
 <div>
-    <h4>ProjectSubmission</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -42,6 +41,46 @@
         </dd>
     </dl>
 </div>
+<hr />
+
+<div class="h2 text-center text-primary">Developer Bids</div>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            User
+        </th>
+        <th>
+            Offer Amount
+        </th>
+        <th>
+            Finish By Date
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Bids) {
+        <tr>
+            <td class="align-items-center">
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.OfferAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FinishDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Accept</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger">Decline</a> |
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

@@ -10,23 +10,23 @@ using DevForge_Connect.Entities;
 
 namespace DevForge_Connect.Controllers
 {
-    public class ProjectSubmissionsController : Controller
+    public class ProjectBidsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ProjectSubmissionsController(ApplicationDbContext context)
+        public ProjectBidsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: ProjectSubmissions
+        // GET: ProjectBids
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ProjectSubmissions.Include(p => p.Creator);
+            var applicationDbContext = _context.ProjectBids.Include(p => p.Project).Include(p => p.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: ProjectSubmissions/Details/5
+        // GET: ProjectBids/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,43 +34,45 @@ namespace DevForge_Connect.Controllers
                 return NotFound();
             }
 
-            var projectSubmission = await _context.ProjectSubmissions
-                .Include(p => p.Creator)
-                .Include(p => p.Bids)
+            var projectBid = await _context.ProjectBids
+                .Include(p => p.Project)
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (projectSubmission == null)
+            if (projectBid == null)
             {
                 return NotFound();
             }
 
-            return View(projectSubmission);
+            return View(projectBid);
         }
 
-        // GET: ProjectSubmissions/Create
+        // GET: ProjectBids/Create
         public IActionResult Create()
         {
-            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: ProjectSubmissions/Create
+        // POST: ProjectBids/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Deadline,Funding,creatorId")] ProjectSubmission projectSubmission)
+        public async Task<IActionResult> Create([Bind("Id,OfferAmount,FinishDate,UserId,ProjectId")] ProjectBid projectBid)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(projectSubmission);
+                _context.Add(projectBid);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id", projectSubmission.creatorId);
-            return View(projectSubmission);
+            ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id", projectBid.ProjectId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectBid.UserId);
+            return View(projectBid);
         }
 
-        // GET: ProjectSubmissions/Edit/5
+        // GET: ProjectBids/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,23 +80,24 @@ namespace DevForge_Connect.Controllers
                 return NotFound();
             }
 
-            var projectSubmission = await _context.ProjectSubmissions.FindAsync(id);
-            if (projectSubmission == null)
+            var projectBid = await _context.ProjectBids.FindAsync(id);
+            if (projectBid == null)
             {
                 return NotFound();
             }
-            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id", projectSubmission.creatorId);
-            return View(projectSubmission);
+            ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id", projectBid.ProjectId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectBid.UserId);
+            return View(projectBid);
         }
 
-        // POST: ProjectSubmissions/Edit/5
+        // POST: ProjectBids/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Deadline,Funding,creatorId")] ProjectSubmission projectSubmission)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OfferAmount,FinishDate,UserId,ProjectId")] ProjectBid projectBid)
         {
-            if (id != projectSubmission.Id)
+            if (id != projectBid.Id)
             {
                 return NotFound();
             }
@@ -103,12 +106,12 @@ namespace DevForge_Connect.Controllers
             {
                 try
                 {
-                    _context.Update(projectSubmission);
+                    _context.Update(projectBid);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectSubmissionExists(projectSubmission.Id))
+                    if (!ProjectBidExists(projectBid.Id))
                     {
                         return NotFound();
                     }
@@ -119,11 +122,12 @@ namespace DevForge_Connect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id", projectSubmission.creatorId);
-            return View(projectSubmission);
+            ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id", projectBid.ProjectId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectBid.UserId);
+            return View(projectBid);
         }
 
-        // GET: ProjectSubmissions/Delete/5
+        // GET: ProjectBids/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,35 +135,36 @@ namespace DevForge_Connect.Controllers
                 return NotFound();
             }
 
-            var projectSubmission = await _context.ProjectSubmissions
-                .Include(p => p.Creator)
+            var projectBid = await _context.ProjectBids
+                .Include(p => p.Project)
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (projectSubmission == null)
+            if (projectBid == null)
             {
                 return NotFound();
             }
 
-            return View(projectSubmission);
+            return View(projectBid);
         }
 
-        // POST: ProjectSubmissions/Delete/5
+        // POST: ProjectBids/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var projectSubmission = await _context.ProjectSubmissions.FindAsync(id);
-            if (projectSubmission != null)
+            var projectBid = await _context.ProjectBids.FindAsync(id);
+            if (projectBid != null)
             {
-                _context.ProjectSubmissions.Remove(projectSubmission);
+                _context.ProjectBids.Remove(projectBid);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProjectSubmissionExists(int id)
+        private bool ProjectBidExists(int id)
         {
-            return _context.ProjectSubmissions.Any(e => e.Id == id);
+            return _context.ProjectBids.Any(e => e.Id == id);
         }
     }
 }
