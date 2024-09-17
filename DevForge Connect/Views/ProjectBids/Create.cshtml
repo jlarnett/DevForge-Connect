@@ -9,13 +9,18 @@
 <h4>ProjectBid</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="OfferAmount" class="control-label"></label>
                 <input asp-for="OfferAmount" class="form-control" />
                 <span asp-validation-for="OfferAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProposalDescription" class="control-label"></label>
+                <textarea asp-for="ProposalDescription" class="form-control"></textarea>
+                <span asp-validation-for="ProposalDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FinishDate" class="control-label"></label>
@@ -30,6 +35,7 @@
                 <label asp-for="ProjectId" class="control-label"></label>
                 <select asp-for="ProjectId" class ="form-control" asp-items="ViewBag.ProjectId"></select>
             </div>
+            @Html.HiddenFor(p => p.StatusId)
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -22,5 +22,6 @@ namespace DevForge_Connect.Data
 
         public DbSet<ProjectSubmission> ProjectSubmissions { get; set; }
         public DbSet<ProjectBid> ProjectBids { get; set; }
+        public DbSet<Status> Statuses { get; set; }
     }
 }

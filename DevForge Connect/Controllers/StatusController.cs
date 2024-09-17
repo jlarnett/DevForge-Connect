@@ -10,23 +10,22 @@ using DevForge_Connect.Entities;
 
 namespace DevForge_Connect.Controllers
 {
-    public class ProjectBidsController : Controller
+    public class StatusController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ProjectBidsController(ApplicationDbContext context)
+        public StatusController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: ProjectBids
+        // GET: Status
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ProjectBids.Include(p => p.Project).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.Statuses.ToListAsync());
         }
 
-        // GET: ProjectBids/Details/5
+        // GET: Status/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,47 +33,39 @@ namespace DevForge_Connect.Controllers
                 return NotFound();
             }
 
-            var projectBid = await _context.ProjectBids
-                .Include(p => p.Project)
-                .Include(p => p.User)
-                .Include(p => p.Status)
+            var status = await _context.Statuses
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (projectBid == null)
+            if (status == null)
             {
                 return NotFound();
             }
 
-            return View(projectBid);
+            return View(status);
         }
 
-        // GET: ProjectBids/Create
+        // GET: Status/Create
         public IActionResult Create()
         {
-            ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: ProjectBids/Create
+        // POST: Status/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OfferAmount,FinishDate,UserId,ProposalDescription,StatusId,ProjectId")] ProjectBid projectBid)
+        public async Task<IActionResult> Create([Bind("Id,Description")] Status status)
         {
             if (ModelState.IsValid)
             {
-                projectBid.StatusId = (await _context.Statuses.FirstOrDefaultAsync())!.Id;
-                _context.Add(projectBid);
+                _context.Add(status);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id", projectBid.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectBid.UserId);
-            return View(projectBid);
+            return View(status);
         }
 
-        // GET: ProjectBids/Edit/5
+        // GET: Status/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,24 +73,22 @@ namespace DevForge_Connect.Controllers
                 return NotFound();
             }
 
-            var projectBid = await _context.ProjectBids.FindAsync(id);
-            if (projectBid == null)
+            var status = await _context.Statuses.FindAsync(id);
+            if (status == null)
             {
                 return NotFound();
             }
-            ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id", projectBid.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectBid.UserId);
-            return View(projectBid);
+            return View(status);
         }
 
-        // POST: ProjectBids/Edit/5
+        // POST: Status/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OfferAmount,FinishDate,UserId,ProposalDescription,StatusId,ProjectId")] ProjectBid projectBid)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description")] Status status)
         {
-            if (id != projectBid.Id)
+            if (id != status.Id)
             {
                 return NotFound();
             }
@@ -108,12 +97,12 @@ namespace DevForge_Connect.Controllers
             {
                 try
                 {
-                    _context.Update(projectBid);
+                    _context.Update(status);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectBidExists(projectBid.Id))
+                    if (!StatusExists(status.Id))
                     {
                         return NotFound();
                     }
@@ -124,12 +113,10 @@ namespace DevForge_Connect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id", projectBid.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectBid.UserId);
-            return View(projectBid);
+            return View(status);
         }
 
-        // GET: ProjectBids/Delete/5
+        // GET: Status/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,36 +124,34 @@ namespace DevForge_Connect.Controllers
                 return NotFound();
             }
 
-            var projectBid = await _context.ProjectBids
-                .Include(p => p.Project)
-                .Include(p => p.User)
+            var status = await _context.Statuses
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (projectBid == null)
+            if (status == null)
             {
                 return NotFound();
             }
 
-            return View(projectBid);
+            return View(status);
         }
 
-        // POST: ProjectBids/Delete/5
+        // POST: Status/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var projectBid = await _context.ProjectBids.FindAsync(id);
-            if (projectBid != null)
+            var status = await _context.Statuses.FindAsync(id);
+            if (status != null)
             {
-                _context.ProjectBids.Remove(projectBid);
+                _context.Statuses.Remove(status);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProjectBidExists(int id)
+        private bool StatusExists(int id)
         {
-            return _context.ProjectBids.Any(e => e.Id == id);
+            return _context.Statuses.Any(e => e.Id == id);
         }
     }
 }

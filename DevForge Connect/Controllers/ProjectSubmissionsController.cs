@@ -37,7 +37,17 @@ namespace DevForge_Connect.Controllers
             var projectSubmission = await _context.ProjectSubmissions
                 .Include(p => p.Creator)
                 .Include(p => p.Bids)
+                .Include(p => p.Status)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            foreach (var bid in projectSubmission.Bids)
+            {
+                if (bid.StatusId != null)
+                {
+                    bid.Status = await _context.Statuses.FindAsync(bid.StatusId);
+                }
+            }
+
             if (projectSubmission == null)
             {
                 return NotFound();
@@ -58,10 +68,11 @@ namespace DevForge_Connect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Deadline,Funding,creatorId")] ProjectSubmission projectSubmission)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Deadline,Funding,creatorId,StatusId")] ProjectSubmission projectSubmission)
         {
             if (ModelState.IsValid)
             {
+                projectSubmission.StatusId = (await _context.Statuses.FirstOrDefaultAsync())!.Id;
                 _context.Add(projectSubmission);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -92,7 +103,7 @@ namespace DevForge_Connect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Deadline,Funding,creatorId")] ProjectSubmission projectSubmission)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Deadline,Funding,creatorId,StatusId")] ProjectSubmission projectSubmission)
         {
             if (id != projectSubmission.Id)
             {
