@@ -36,8 +36,16 @@
                 <label asp-for="creatorId" class="control-label"></label>
                 <select asp-for="creatorId" class="form-control" asp-items="ViewBag.creatorId"></select>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
+            <div class="form-group row">
+                <div class="col">
+                    <input type="submit" value="Create" class="btn btn-primary w-100"/>
+                </div>
+                <div class="col">
+                    <input id="TestAPIBtn" type="button" value="Test Gemeni API Call" class="btn btn-primary w-100"/>
+                </div>
+            </div>
+            <div class="form-group" id="GemeniResponse">
+                GEMENI RESPONSE SHOULD SHOW HERE
             </div>
         </form>
     </div>
@@ -51,4 +59,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript" src="~/js/LLM_API/api.js"></script>
 }

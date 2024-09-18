@@ -18,6 +18,19 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        builder =>
+        {
+            builder.WithOrigins("http://127.0.0.1:8000");
+            builder.WithHeaders("Access-Control-Allow-Headers");
+            builder.WithHeaders("Access-Control-Allow-Origin");
+        });
+});
+
 //Send Grid service setup
 builder.Services.Configure<SendGridEmailSenderOptions>(options =>
 {
@@ -47,6 +60,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+//Enables app cors policy for calling FastAPI.
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
