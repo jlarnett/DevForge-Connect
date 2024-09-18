@@ -4,6 +4,7 @@ using DevForge_Connect.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevForge_Connect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240917035526_ProjectBid")]
+    partial class ProjectBid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,14 +104,7 @@ namespace DevForge_Connect.Migrations
                     b.Property<decimal>("OfferAmount")
                         .HasColumnType("money");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProposalDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("StatusId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -118,8 +114,6 @@ namespace DevForge_Connect.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -145,9 +139,6 @@ namespace DevForge_Connect.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StatusId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -157,28 +148,9 @@ namespace DevForge_Connect.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StatusId");
-
                     b.HasIndex("creatorId");
 
                     b.ToTable("ProjectSubmissions");
-                });
-
-            modelBuilder.Entity("DevForge_Connect.Entities.Status", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -322,11 +294,9 @@ namespace DevForge_Connect.Migrations
                 {
                     b.HasOne("DevForge_Connect.Entities.ProjectSubmission", "Project")
                         .WithMany("Bids")
-                        .HasForeignKey("ProjectId");
-
-                    b.HasOne("DevForge_Connect.Entities.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
                         .WithMany()
@@ -336,24 +306,16 @@ namespace DevForge_Connect.Migrations
 
                     b.Navigation("Project");
 
-                    b.Navigation("Status");
-
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("DevForge_Connect.Entities.ProjectSubmission", b =>
                 {
-                    b.HasOne("DevForge_Connect.Entities.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId");
-
                     b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "Creator")
                         .WithMany()
                         .HasForeignKey("creatorId");
 
                     b.Navigation("Creator");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
