@@ -12,6 +12,16 @@ namespace DevForge_Connect.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<ProjectBid>()
+                .Property(i => i.OfferAmount)
+                .HasColumnType("money");
+        }
+
         public DbSet<ProjectSubmission> ProjectSubmissions { get; set; }
+        public DbSet<ProjectBid> ProjectBids { get; set; }
+        public DbSet<Status> Statuses { get; set; }
     }
 }

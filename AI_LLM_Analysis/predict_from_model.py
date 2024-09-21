@@ -2,7 +2,7 @@ import spacy
 
 
 def spacy_prediction(text):
-    nlp = spacy.load("./AI_LLM_Analysis/trained_models")
+    nlp = spacy.load("trained_models")
 
     # Mapping intents to technologies
     # Mapping of categories to specific technologies

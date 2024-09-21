@@ -13,5 +13,10 @@ namespace DevForge_Connect.Entities
 
         [Required] public string? creatorId { get; set; }
         public ApplicationUser? Creator { get; set; }
+
+        public int? StatusId { get; set; }
+        public Status? Status { get; set; }
+
+        public ICollection<ProjectBid> Bids { get; set; } = new List<ProjectBid>();
     }
 }
