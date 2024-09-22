@@ -25,7 +25,7 @@ textcat.add_label("IOT")
 nlp.initialize()
 
 
-with open('AI_LLM_Analysis/training_data.json', 'r') as file:
+with open('training_data.json', 'r') as file:
     TRAINING_DATA_FILE = json.load(file)
 
 TRAINING_DATA = [(item["text"], {"cats": item["cats"]}) for item in TRAINING_DATA_FILE["training_data"]]
@@ -33,7 +33,7 @@ TRAINING_DATA = [(item["text"], {"cats": item["cats"]}) for item in TRAINING_DAT
 optimizer = nlp.initialize()
 
 # Training loop
-for epoch in range(10):
+for epoch in range(20):
     random.shuffle(TRAINING_DATA)
     losses = {}
     for text, annotations in TRAINING_DATA:
@@ -42,7 +42,7 @@ for epoch in range(10):
         nlp.update([example], sgd=optimizer, losses=losses)
     print(f"Epoch {epoch} - Losses: {losses}")
 
-output_dir = "AI_LLM_Analysis/trained_models"
+output_dir = "trained_models"
 
 nlp.to_disk(output_dir)
 

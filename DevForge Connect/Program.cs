@@ -42,6 +42,8 @@ builder.Services.Configure<SendGridEmailSenderOptions>(options =>
 
 builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
 
+builder.Services.AddHostedService<PythonServerHostedService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
