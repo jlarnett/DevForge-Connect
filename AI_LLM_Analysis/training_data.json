@@ -259,6 +259,253 @@
         "MOBILE_DEVELOPMENT": 1,
         "IOT": 1
       }
+      },
+      {
+        "text": "We need a web application that analyzes user behavior and suggests relevant products.",
+        "cats": {
+          "STORAGE": 1,
+          "AI": 1,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 1,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "Our mobile app must store customer data securely and provide AI-powered recommendations.",
+        "cats": {
+          "STORAGE": 1,
+          "AI": 1,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "The system should support real-time communication and integrate with IoT devices.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 0,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 1
+        }
+      },
+      {
+        "text": "Build a web-based platform for game development that allows real-time multiplayer interaction.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 0,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 1,
+          "GAME_DEVELOPMENT": 1,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "We are building a mobile app that communicates with wearables and IoT health devices.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 0,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 1
+        }
+      },
+      {
+        "text": "We need an AI system that can process large amounts of sensor data from smart devices.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 1,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 1
+        }
+      },
+      {
+        "text": "The game should adapt to player behavior using AI algorithms and store high scores in the cloud.",
+        "cats": {
+          "STORAGE": 1,
+          "AI": 1,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 1,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "Develop a smart assistant app that responds to voice commands and manages connected devices.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 1,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 1
+        }
+      },
+      {
+        "text": "Our platform needs to store large datasets and perform data analysis to generate insights.",
+        "cats": {
+          "STORAGE": 1,
+          "AI": 0,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 1,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "We are developing a mobile game that utilizes AI for generating levels based on player data.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 1,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 1,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "The mobile app should allow users to communicate in real-time while controlling IoT devices.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 0,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 1
+        }
+      },
+      {
+        "text": "We need a data storage solution for a web app that manages user content and preferences.",
+        "cats": {
+          "STORAGE": 1,
+          "AI": 0,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 1,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "The system should analyze sensor data from IoT devices to provide predictive insights.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 1,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 1
+        }
+      },
+      {
+        "text": "We are developing a cloud-based system that stores data from IoT sensors and mobile apps.",
+        "cats": {
+          "STORAGE": 1,
+          "AI": 0,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 1,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 1
+        }
+      },
+      {
+        "text": "Create a web platform that supports real-time communication between users and mobile apps.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 0,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 1,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "We want to build a platform where AI analyzes game data and enhances the user experience.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 1,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 1,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "Our platform needs AI-powered recommendations and communication tools for mobile users.",
+        "cats": {
+          "STORAGE": 0,
+          "AI": 1,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 1,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "We need to store user-generated data in the cloud and provide analytics through a web interface.",
+        "cats": {
+          "STORAGE": 1,
+          "AI": 0,
+          "DATA_ANALYSIS": 1,
+          "COMMUNICATION": 0,
+          "WEB_DEVELOPMENT": 1,
+          "GAME_DEVELOPMENT": 0,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 0
+        }
+      },
+      {
+        "text": "Develop a real-time multiplayer game with AI-based opponent generation and cloud storage.",
+        "cats": {
+          "STORAGE": 1,
+          "AI": 1,
+          "DATA_ANALYSIS": 0,
+          "COMMUNICATION": 1,
+          "WEB_DEVELOPMENT": 0,
+          "GAME_DEVELOPMENT": 1,
+          "MOBILE_DEVELOPMENT": 0,
+          "IOT": 0
+        }
       }
     ]
   }
