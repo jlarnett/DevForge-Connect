@@ -1,0 +1,39 @@
+﻿@model IEnumerable<DevForge_Connect.Entities.Team>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-primary">My Teams</h1>
+
+<p>
+    <a asp-action="Create" class="btn-outline-success btn w-100">Create Team</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="text-center text-dark">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th class="text-center text-dark"># Members</th>
+            <th class="text-center text-dark">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+                <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="text-center">
+                @item.UserTeams.Count
+            </td>
+                <td class="text-center">
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

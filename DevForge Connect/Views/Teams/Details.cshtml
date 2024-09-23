@@ -1,0 +1,63 @@
+﻿@model DevForge_Connect.Models.TeamDetailsVm
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="text-primary">@Model.Name</h1>
+
+<hr/>
+
+<div class="row">
+    <div class="table-responsive col-8 border-end">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>
+                    Users
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in Model.Users) {
+                <tr>
+                    <td class="align-items-center">
+                        @user.Email
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="" class="btn btn-danger">Remove Member</a> |
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-4">
+        <form asp-action="Create" asp-controller="TeamInvites">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <label for="input-datalist">New User</label>
+            <input type="text" class="form-control" placeholder="App User" list="list-users" id="input-datalist">
+            <datalist id="list-users">
+                @{
+                    foreach (var user in Model.fullUserList)
+                    {
+                        <option >@user.Email</option>
+                    }
+                }
+            </datalist>
+            <div class="form-group">
+                <input type="submit" value="Send Team Invite" class="btn btn-primary w-100"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
