@@ -38,7 +38,11 @@ public class PythonServerHostedService: IHostedService {
 
 
             _pythonProcess = Process.Start(psi);
-            Console.WriteLine("Fast Api server started successfully with virtual environment");
+
+            if (_pythonProcess != null)
+            {
+                Console.WriteLine("Fast Api server started successfully with virtual environment");
+            }
 
         } catch (Exception ex)
         {

@@ -1,15 +1,16 @@
-﻿@model DevForge_Connect.Entities.ProjectSubmission
+﻿@using DevForge_Connect.Entities.Identity
+@using Microsoft.AspNetCore.Identity
+@model DevForge_Connect.Entities.ProjectSubmission
+@inject UserManager<ApplicationUser> _UserManager
 
 @{
     ViewData["Title"] = "Create";
 }
 
-
 <h4 class="text-center">Submit Project Idea</h4>
 <hr />
 <div class="row">
-    <div class="col"></div>
-    <div class="col-8 border border-primary p-2 rounded-4">
+    <div class="col-6 border border-primary p-2 rounded-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -36,21 +37,32 @@
                 <label asp-for="creatorId" class="control-label"></label>
                 <select asp-for="creatorId" class="form-control" asp-items="ViewBag.creatorId"></select>
             </div>
+            <input id="SessionId" name="SessionId" type="hidden" value="@_UserManager.GetUserId(Context.User)"/>
             @Html.HiddenFor(p => p.StatusId)
             <div class="form-group row">
                 <div class="col">
                     <input type="submit" value="Create" class="btn btn-primary w-100"/>
                 </div>
-                <div class="col">
-                    <input id="TestAPIBtn" type="button" value="Test Gemeni API Call" class="btn btn-primary w-100"/>
-                </div>
-            </div>
-            <div class="form-group" id="GemeniResponse">
-                GEMENI RESPONSE SHOULD SHOW HERE
             </div>
         </form>
     </div>
-    <div class="col"></div>
+    <div class="col-6 bg-secondary rounded-4" style="white-space: pre-line" >
+        <div class="row text-center text-light m-auto" >
+            <div id="GemeniResponse">
+                Don't be afraid to ask Gemeni for help defining your projects technical specifications.
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group row">
+                <div class="col-10">
+                    <input type="text" id="GemeniMessage" value="Create" class="form-control"/>
+                </div>
+                <div class="col-2">
+                    <input id="TestAPIBtn" type="button" value="Ask Gemeni" class="btn btn-primary w-100"/>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <hr />
 

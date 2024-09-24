@@ -18,10 +18,14 @@ namespace DevForge_Connect.Data
             builder.Entity<ProjectBid>()
                 .Property(i => i.OfferAmount)
                 .HasColumnType("money");
+
         }
 
         public DbSet<ProjectSubmission> ProjectSubmissions { get; set; }
         public DbSet<ProjectBid> ProjectBids { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<UserTeam> UserTeams { get; set; }
+        public DbSet<TeamInvite> TeamInvites { get; set; }
     }
 }

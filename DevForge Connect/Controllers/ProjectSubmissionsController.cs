@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevForge_Connect.Controllers
 {
@@ -20,6 +21,7 @@ namespace DevForge_Connect.Controllers
         }
 
         // GET: ProjectSubmissions
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.ProjectSubmissions.Include(p => p.Creator);
@@ -57,6 +59,7 @@ namespace DevForge_Connect.Controllers
         }
 
         // GET: ProjectSubmissions/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
@@ -66,6 +69,7 @@ namespace DevForge_Connect.Controllers
         // POST: ProjectSubmissions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,Deadline,Funding,creatorId,StatusId")] ProjectSubmission projectSubmission)
@@ -82,6 +86,7 @@ namespace DevForge_Connect.Controllers
         }
 
         // GET: ProjectSubmissions/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -101,6 +106,7 @@ namespace DevForge_Connect.Controllers
         // POST: ProjectSubmissions/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Deadline,Funding,creatorId,StatusId")] ProjectSubmission projectSubmission)
@@ -135,6 +141,7 @@ namespace DevForge_Connect.Controllers
         }
 
         // GET: ProjectSubmissions/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -154,6 +161,7 @@ namespace DevForge_Connect.Controllers
         }
 
         // POST: ProjectSubmissions/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
