@@ -1,6 +1,6 @@
 ﻿$(document).ready(function() {
     $("#TestAPIBtn").click(function(){
-        let message = $("#Description").val();
+        let message = $("#GemeniMessage").val();
         let sessionId = $("#SessionId").val();
 
         if (message === "" || message === undefined) {
