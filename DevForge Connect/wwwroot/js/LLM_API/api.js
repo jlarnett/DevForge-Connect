@@ -1,6 +1,7 @@
 ﻿$(document).ready(function() {
     $("#TestAPIBtn").click(function(){
         let message = $("#Description").val();
+        let sessionId = $("#SessionId").val();
 
         if (message === "" || message === undefined) {
             //Check for empty string before sending to API
@@ -8,11 +9,11 @@
         }
         else {
             //Call the FastAPI Function
-            SendMessageGemini(message);
+            SendMessageGemini(message, sessionId);
         }
     }); 
 });
-function SendMessageGemini(message) {
+function SendMessageGemini(message, sessionId) {
     fetch("http://127.0.0.1:8000/genResponse?text=" + message)
         .then(response => {
         if (!response.ok) {

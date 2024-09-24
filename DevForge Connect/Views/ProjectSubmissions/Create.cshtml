@@ -4,7 +4,6 @@
     ViewData["Title"] = "Create";
 }
 
-
 <h4 class="text-center">Submit Project Idea</h4>
 <hr />
 <div class="row">
@@ -36,6 +35,7 @@
                 <label asp-for="creatorId" class="control-label"></label>
                 <select asp-for="creatorId" class="form-control" asp-items="ViewBag.creatorId"></select>
             </div>
+            <input id="SessionId" name="SessionId" type="hidden" value="@Context.Session.Id"/>
             @Html.HiddenFor(p => p.StatusId)
             <div class="form-group row">
                 <div class="col">
