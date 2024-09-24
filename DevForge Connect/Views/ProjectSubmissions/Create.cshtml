@@ -1,4 +1,7 @@
-﻿@model DevForge_Connect.Entities.ProjectSubmission
+﻿@using DevForge_Connect.Entities.Identity
+@using Microsoft.AspNetCore.Identity
+@model DevForge_Connect.Entities.ProjectSubmission
+@inject UserManager<ApplicationUser> _UserManager
 
 @{
     ViewData["Title"] = "Create";
@@ -35,7 +38,7 @@
                 <label asp-for="creatorId" class="control-label"></label>
                 <select asp-for="creatorId" class="form-control" asp-items="ViewBag.creatorId"></select>
             </div>
-            <input id="SessionId" name="SessionId" type="hidden" value="@Context.Session.Id"/>
+            <input id="SessionId" name="SessionId" type="hidden" value="@_UserManager.GetUserId(Context.User)"/>
             @Html.HiddenFor(p => p.StatusId)
             <div class="form-group row">
                 <div class="col">
