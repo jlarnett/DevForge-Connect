@@ -8,5 +8,6 @@ namespace DevForge_Connect.Entities.Identity
         //Navigation Properties
         public List<Team> Teams { get; } = [];
         public List<UserTeam> UserTeams { get; } = [];
+        public List<TeamInvite> TeamInvites { get; set; }
     }
 }

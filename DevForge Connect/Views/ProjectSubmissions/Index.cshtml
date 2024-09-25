@@ -10,14 +10,14 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-<div class="table-responsive">
-    <table class="table">
+<div class="table-responsive" >
+    <table class="table stripe" id="ProjectTable" data-page-length="25">
         <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
+            <th class="col-6">
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
@@ -38,7 +38,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                <td>
+                <td class="col-6" style="white-space: pre-line">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
@@ -48,7 +48,7 @@
                     @Html.DisplayFor(modelItem => item.Funding)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Creator.Id)
+                    @Html.DisplayFor(modelItem => item.Creator.Email)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -60,4 +60,9 @@
         </tbody>
     </table>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript" src="~/js/Table_Initializers/ProjectSubmissionTable.js"></script>
+}
 

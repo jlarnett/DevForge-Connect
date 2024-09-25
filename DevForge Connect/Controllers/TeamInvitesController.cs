@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
+using DevForge_Connect.Migrations;
 
 namespace DevForge_Connect.Controllers
 {
@@ -61,15 +62,38 @@ namespace DevForge_Connect.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TeamId,UserId,StatusId,LastUpdatedDate")] TeamInvite teamInvite)
         {
+            //Needs to be review in DB
+            teamInvite.StatusId = 1;
+
             if (ModelState.IsValid)
             {
+                //Verify user isn't already part of the team. 
+                //Verify that a team invite doesn't alreayd exists
+
+                var userAlreadyInTeam = await _context.UserTeams
+                    .Where(ut => ut.TeamId.Equals(teamInvite.TeamId) && ut.UserId.Equals(teamInvite.UserId)).AnyAsync();
+
+                var teamInviteAlreadySent = await _context.TeamInvites.Where(ti =>
+                        ti.TeamId.Equals(teamInvite.TeamId) && ti.UserId.Equals(teamInvite.UserId) &&
+                        ti.StatusId.Equals(1))
+                    .AnyAsync();
+
+                if (userAlreadyInTeam)
+                {
+                    return RedirectToAction("Details", "Teams", new {id=teamInvite.TeamId, errorMessage="supplied user is already a team member"} );
+                }
+
+                if (teamInviteAlreadySent)
+                {
+                    return RedirectToAction("Details", "Teams", new {id=teamInvite.TeamId, errorMessage="team invite already sent"} );
+                }
+
                 _context.Add(teamInvite);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Teams", new {id=teamInvite.TeamId} );
             }
-            ViewData["TeamId"] = new SelectList(_context.Teams, "Id", "Id", teamInvite.TeamId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", teamInvite.StatusId);
-            return View(teamInvite);
+
+            return RedirectToAction("Details", "Teams", new {id=teamInvite.TeamId, errorMessage="error sending team invite, user not defined"} );
         }
 
         // GET: TeamInvites/Edit/5
