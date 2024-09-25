@@ -1,16 +1,45 @@
-﻿@using DevForge_Connect.Entities.Identity
-@using Microsoft.AspNetCore.Identity
+﻿
 @model DevForge_Connect.Entities.ProjectSubmission
-@inject UserManager<ApplicationUser> _UserManager
 
 @{
     ViewData["Title"] = "Create";
+    
 }
+<style>    
+    .open-button {
+        background-color: #555;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        opacity: 0.8;
+        position: fixed;
+        bottom: 23px;
+        right: 28px;
+        width: 280px;
+    }
+
+    .chat-popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 15px;
+        border: 3px solid black;
+        z-index: 9;
+    }
+
+    .form-container {
+        max-width: 400px;
+        padding: 10px;
+        background-color: lightgrey;
+</style>
+
 
 <h4 class="text-center">Submit Project Idea</h4>
 <hr />
 <div class="row">
-    <div class="col-6 border border-primary p-2 rounded-4">
+    <div class="col"></div>
+    <div class="col-6 border border-primary p-2 rounded-4 m-2">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -37,29 +66,27 @@
                 <label asp-for="creatorId" class="control-label"></label>
                 <select asp-for="creatorId" class="form-control" asp-items="ViewBag.creatorId"></select>
             </div>
-            <input id="SessionId" name="SessionId" type="hidden" value="@_UserManager.GetUserId(Context.User)"/>
-            @Html.HiddenFor(p => p.StatusId)
-            <div class="form-group row">
-                <div class="col">
-                    <input type="submit" value="Create" class="btn btn-primary w-100"/>
-                </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
         </form>
     </div>
-    <div class="col-6 bg-secondary rounded-4" style="white-space: pre-line" >
-        <div class="row text-center text-light m-auto" >
-            <div id="GemeniResponse">
-                Don't be afraid to ask Gemeni for help defining your projects technical specifications.
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group row">
-                <div class="col-10">
-                    <input type="text" id="GemeniMessage" value="Create" class="form-control"/>
-                </div>
-                <div class="col-2">
-                    <input id="TestAPIBtn" type="button" value="Ask Gemeni" class="btn btn-primary w-100"/>
-                </div>
+    <div class="col">
+      <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+        <div class="chat-popup form-container" id="myForm">
+        <h1>Chat Bot</h1>
+            <div class="overflow-auto" style="max-height: 400px;">
+                <div id="messages"></div>
+
+                <hr/>
+
+                <div class="input-group mb-3">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
+
+                    <div class="input-group-append">
+                        <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+                    </div>
             </div>
         </div>
     </div>
@@ -70,7 +97,20 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script>
+    function openForm() {
+        document.getElementById("myForm").style.display = "block";
+        document.getElementById("openBtn").style.display = "none";
+    }
+
+    function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+        document.getElementById("openBtn").style.display = "block";
+    }
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
     <script type="text/javascript" src="~/js/LLM_API/api.js"></script>
 }
