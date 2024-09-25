@@ -71,25 +71,26 @@
             </div>
         </form>
     </div>
-    <div class="col">
-      <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
-        <div class="chat-popup form-container" id="myForm">
+<div class="col">
+    <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+    <div class="chat-popup form-container" id="myForm">
         <h1>Chat Bot</h1>
-            <div class="overflow-auto" style="max-height: 400px;">
-                <div id="messages"></div>
+        <div class="overflow-auto" style="max-height: 400px;">
+            <div id="messages" style="overflow-anchor:none"></div>
 
-                <hr/>
+            <hr/>
 
-                <div class="input-group mb-3">
-                    <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
+            <div class="input-group mb-3">
+                <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
 
-                    <div class="input-group-append">
-                        <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
-                        <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
-                    </div>
+                <div class="input-group-append">
+                    <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+                </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <hr />
 
