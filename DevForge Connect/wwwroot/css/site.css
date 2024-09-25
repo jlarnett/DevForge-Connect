@@ -2,7 +2,7 @@ html {
   font-size: 14px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   html {
     font-size: 16px;
   }
@@ -18,10 +18,5 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
-}
-
-.col-xl-1-5 {
-    flex: 0 0 auto;
-    width: 12.33333333%;
+  /*margin-bottom: 60px;*/
 }
