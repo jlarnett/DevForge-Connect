@@ -11,6 +11,7 @@ using DevForge_Connect.Entities.Identity;
 using DevForge_Connect.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DevForge_Connect.Controllers
 {
@@ -47,8 +48,13 @@ namespace DevForge_Connect.Controllers
         }
 
         // GET: Teams/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string errorMessage = "")
         {
+            if (errorMessage != "")
+            {
+                ModelState.AddModelError("", errorMessage);
+            }
+
             if (id == null) return NotFound();
 
             var team = await _context.Teams.Include(m => m.UserTeams)
@@ -65,6 +71,8 @@ namespace DevForge_Connect.Controllers
             }
 
             var fullUserList = await _userManager.Users.ToListAsync();
+            var pendingInvites =
+                await _context.TeamInvites.Where(i => i.TeamId.Equals(team.Id) && i.StatusId.Equals(1)).Include(i => i.User).Include(i => i.Status).ToListAsync();
 
             var vm = new TeamDetailsVm()
             {
@@ -72,7 +80,8 @@ namespace DevForge_Connect.Controllers
                 Users = team.Users,
                 Name = team.Name,
                 UserTeams = team.UserTeams,
-                fullUserList = fullUserList
+                fullUserList = fullUserList,
+                pendingInvites = pendingInvites
             };
 
             return View(vm);

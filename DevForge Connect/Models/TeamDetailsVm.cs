@@ -16,5 +16,6 @@ namespace DevForge_Connect.Models
         public List<ApplicationUser> Users { get; set; } = [];
 
         public List<ApplicationUser> fullUserList { get; set; } = new List<ApplicationUser>();
+        public List<TeamInvite> pendingInvites { get; set; } = new List<TeamInvite>();
     }
 }

@@ -1,4 +1,9 @@
-﻿@model DevForge_Connect.Models.TeamDetailsVm
+﻿@using System.ComponentModel
+@using DevForge_Connect.Entities
+@using DevForge_Connect.Entities.Identity
+@using Microsoft.AspNetCore.Identity
+@model DevForge_Connect.Models.TeamDetailsVm
+@inject UserManager<ApplicationUser> _userManager
 
 @{
     ViewData["Title"] = "Details";
@@ -36,23 +41,45 @@
         </table>
     </div>
     <div class="col-4">
-        <form asp-action="Create" asp-controller="TeamInvites">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <label for="input-datalist">New User</label>
-            <input type="text" class="form-control" placeholder="App User" list="list-users" id="input-datalist">
-            <datalist id="list-users">
-                @{
-                    foreach (var user in Model.fullUserList)
-                    {
-                        <option >@user.Email</option>
+        @{
+            await Html.RenderPartialAsync("_TeamInvitePartial", new TeamInvite()
+            {
+                TeamId = Model.Id,
+            });
+
+            <hr/>
+        }
+        <div class="row">
+            <h2>Pending Invites</h2>
+            <div class="table-responsive col-12 border-end">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            Recipient
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var invite in Model.pendingInvites) {
+                        <tr>
+                            <td class="align-items-center">
+                                @invite.User.Email
+                            </td>
+                            <td>
+                                @invite.Status.Description
+                            </td>
+                        </tr>
                     }
-                }
-            </datalist>
-            <div class="form-group">
-                <input type="submit" value="Send Team Invite" class="btn btn-primary w-100"/>
+                    </tbody>
+                </table>
             </div>
-        </form>
+        </div>
     </div>
+
 </div>
 
 

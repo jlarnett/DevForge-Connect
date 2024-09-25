@@ -4,6 +4,7 @@ using DevForge_Connect.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevForge_Connect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240925023744_team-invite")]
+    partial class teaminvite
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,6 +226,9 @@ namespace DevForge_Connect.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("RecipientUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
@@ -230,15 +236,15 @@ namespace DevForge_Connect.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RecipientUserId");
 
                     b.HasIndex("StatusId");
 
                     b.HasIndex("TeamId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("TeamInvites");
                 });
@@ -459,6 +465,10 @@ namespace DevForge_Connect.Migrations
 
             modelBuilder.Entity("DevForge_Connect.Entities.TeamInvite", b =>
                 {
+                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "RecipientUser")
+                        .WithMany("TeamInvites")
+                        .HasForeignKey("RecipientUserId");
+
                     b.HasOne("DevForge_Connect.Entities.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
@@ -471,15 +481,11 @@ namespace DevForge_Connect.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
-                        .WithMany("TeamInvites")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("InvitingTeam");
 
-                    b.Navigation("Status");
+                    b.Navigation("RecipientUser");
 
-                    b.Navigation("User");
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("DevForge_Connect.Entities.UserTeam", b =>

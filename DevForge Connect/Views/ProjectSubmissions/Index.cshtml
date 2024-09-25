@@ -10,8 +10,8 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-<div class="table-responsive">
-    <table class="table">
+<div class="table-responsive" >
+    <table class="table stripe" id="ProjectTable" data-page-length="25">
         <thead>
         <tr>
             <th>
@@ -60,4 +60,9 @@
         </tbody>
     </table>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript" src="~/js/Table_Initializers/ProjectSubmissionTable.js"></script>
+}
 
