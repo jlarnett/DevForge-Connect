@@ -51,7 +51,7 @@
 
 <div class="h2 text-center text-primary">Developer Bids</div>
 
-<table class="table table-striped">
+<table class="table table-striped" id="BidTable">
     <thead>
     <tr>
         <th>
@@ -98,3 +98,8 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript" src="~/js/Table_Initializers/BidTable.js"></script>
+}
