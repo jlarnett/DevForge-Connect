@@ -10,7 +10,7 @@
   
 
 
-    <link rel="stylesheet" href="~/DevForge_Connect.styles.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/DevForge_Connect.styles.css" asp-append-version="true" /> *@
     <link href="~/css/style.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.dataTables.css" />
 </head>
@@ -45,6 +45,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="UserTeams" asp-action="Index">User Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Administration" asp-action="CreateRole">Create Role</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
