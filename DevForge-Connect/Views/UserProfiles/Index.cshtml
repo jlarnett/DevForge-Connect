@@ -1,0 +1,20 @@
+﻿@model DevForge_Connect.Entities.UserProfile
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>Profile</h1>
+
+<div class="profile-container text-center">
+    <div class="profile-info">
+        <img src="@(Model.ProfilePicture != null ? "data:image/png;base64," + Convert.ToBase64String(Model.ProfilePicture) : Url.Content("~/Pictures/default-pfp.jpeg"))" alt="Profile Picture" width="150" height="150" class="profile-picture"/>
+        <div class="profile-details">
+            <h3>@Model.User.FirstName @Model.User.LastName</h3>
+            <p><strong>Bio:</strong> @Model.Bio</p>
+            <p><strong>Email:</strong> @Model.User.Email</p>
+        </div>
+    </div>
+    
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit Profile</a>
+</div>

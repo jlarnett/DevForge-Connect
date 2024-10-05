@@ -1,0 +1,45 @@
+﻿@model DevForge_Connect.Entities.UserProfile
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h1 class="text-center">Edit Profile</h1>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+            <h4 class="card-title text-center">Update Your Profile</h4>
+            <div class="card-body">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="UserId" />
+                    <div class="form-group">
+                        <label asp-for="Bio" class="control-label">Bio</label>
+                        <textarea asp-for="Bio" class="form-control" placeholder="Write a short bio"></textarea>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ProfilePicture" class="control-label">Profile Picture</label>
+                        <input asp-for="ProfilePicture" class="form-control-file" type="file" accept=".jpeg,.jpg" />
+                        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="ProfilePicture" />
+                    <div class="form-group text-center">
+                        <input type="submit" value="Save" class="btn btn-primary btn-block" />
+                    </div>
+                    <div class="form-group text-center">
+                        <a asp-action="Index" class="btn btn-secondary btn-block">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
