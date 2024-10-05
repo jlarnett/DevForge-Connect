@@ -7,17 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
+using DevForge_Connect.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace DevForge_Connect.Controllers
 {
     public class ProjectSubmissionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProjectSubmissionsController(ApplicationDbContext context)
+        public ProjectSubmissionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ProjectSubmissions
@@ -74,6 +78,8 @@ namespace DevForge_Connect.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,Deadline,Funding,creatorId,StatusId")] ProjectSubmission projectSubmission)
         {
+            projectSubmission.creatorId = _userManager.GetUserId(User);
+
             if (ModelState.IsValid)
             {
                 projectSubmission.StatusId = (await _context.Statuses.FirstOrDefaultAsync())!.Id;

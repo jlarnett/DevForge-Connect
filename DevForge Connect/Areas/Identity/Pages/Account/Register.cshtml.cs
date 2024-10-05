@@ -98,6 +98,12 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+
+            //Custom Inputs
+            [Required]
+            [Display(Name = "Developer Trigger")]
+            public bool isDeveloperAccount { get; set; }
         }
 
 
@@ -117,10 +123,16 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    if (Input.isDeveloperAccount)
+                        await _userManager.AddToRoleAsync(user, "developer");
+                    else
+                        await _userManager.AddToRoleAsync(user, "client");
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
