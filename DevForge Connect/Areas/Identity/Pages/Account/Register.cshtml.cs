@@ -102,6 +102,16 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
 
             //Custom Inputs
             [Required]
+            [StringLength(100, ErrorMessage = "Cannot be empty.", MinimumLength = 1)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "Cannot be empty.", MinimumLength = 1)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Required]
             [Display(Name = "Developer Trigger")]
             public bool isDeveloperAccount { get; set; }
         }
@@ -120,6 +130,9 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
