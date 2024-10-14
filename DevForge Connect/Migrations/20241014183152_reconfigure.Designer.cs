@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevForge_Connect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241013220213_deleteUserIds")]
-    partial class deleteUserIds
+    [Migration("20241014183152_reconfigure")]
+    partial class reconfigure
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

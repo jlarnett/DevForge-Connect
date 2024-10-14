@@ -1,4 +1,5 @@
-﻿using DevForge_Connect.Entities.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+using DevForge_Connect.Entities.Identity;
 using Microsoft.Build.Framework;
 
 namespace DevForge_Connect.Entities
@@ -11,7 +12,10 @@ namespace DevForge_Connect.Entities
         public DateTime Deadline { get; set; }
         public string Funding { get; set; } = string.Empty;
 
-        [Required] public string? creatorId { get; set; }
+        [AllowNull]
+        public string? creatorId { get; set; }
+
+        [AllowNull]
         public ApplicationUser? Creator { get; set; }
 
         public int? StatusId { get; set; }

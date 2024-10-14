@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
-using DevForge_Connect.Migrations;
 
 namespace DevForge_Connect.Controllers
 {

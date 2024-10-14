@@ -15,16 +15,16 @@ public class AdministrationController : Controller
     }
 
     [HttpGet]
-    [Authorize]
-    [Authorize(Roles = "admin")]
+    //[Authorize]
+    //[Authorize(Roles = "admin")]
     public IActionResult CreateRole()
     {
         return View();
     }
 
     [HttpPost]
-    [Authorize]
-    [Authorize(Roles = "admin")]
+    //[Authorize]
+    //[Authorize(Roles = "admin")]
     public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
     {
         if (ModelState.IsValid)

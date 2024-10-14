@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevForge_Connect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240925023744_team-invite")]
-    partial class teaminvite
+    [Migration("20241014185419_removeRequiredCreatorId")]
+    partial class removeRequiredCreatorId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -58,6 +58,14 @@ namespace DevForge_Connect.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -226,9 +234,6 @@ namespace DevForge_Connect.Migrations
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("RecipientUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
@@ -236,17 +241,43 @@ namespace DevForge_Connect.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RecipientUserId");
 
                     b.HasIndex("StatusId");
 
                     b.HasIndex("TeamId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("TeamInvites");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.UserProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserProfile");
                 });
 
             modelBuilder.Entity("DevForge_Connect.Entities.UserTeam", b =>
@@ -465,10 +496,6 @@ namespace DevForge_Connect.Migrations
 
             modelBuilder.Entity("DevForge_Connect.Entities.TeamInvite", b =>
                 {
-                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "RecipientUser")
-                        .WithMany("TeamInvites")
-                        .HasForeignKey("RecipientUserId");
-
                     b.HasOne("DevForge_Connect.Entities.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
@@ -481,11 +508,28 @@ namespace DevForge_Connect.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("TeamInvites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("InvitingTeam");
 
-                    b.Navigation("RecipientUser");
-
                     b.Navigation("Status");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.UserProfile", b =>
+                {
+                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DevForge_Connect.Entities.UserTeam", b =>

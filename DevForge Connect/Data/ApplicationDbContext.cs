@@ -23,7 +23,7 @@ namespace DevForge_Connect.Data
                 .HasOne(ut => ut.User)
                 .WithMany(u => u.UserTeams)
                 .HasForeignKey(ut => ut.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
         }
 

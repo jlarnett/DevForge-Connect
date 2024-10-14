@@ -5,10 +5,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using DevForge_Connect.Data;
 using DevForge_Connect.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace DevForge_Connect.Areas.Identity.Pages.Account.Manage
@@ -18,15 +20,17 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly ApplicationDbContext _context;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
         /// <summary>
@@ -87,7 +91,15 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            //Remove the old project submissions that were associated with user.
+            await _context.UserProfile.Where(p => p.UserId.Equals(user.Id)).ExecuteDeleteAsync();
+            await _context.ProjectBids.Where(p => p.UserId.Equals(user.Id)).ExecuteDeleteAsync();
+            await _context.ProjectSubmissions.Where(p => p.creatorId.Equals(user.Id)).ExecuteDeleteAsync();
+            await _context.UserTeams.Where(p => p.UserId.Equals(user.Id)).ExecuteDeleteAsync();
+            var rowsModified = await _context.SaveChangesAsync();
+
             var result = await _userManager.DeleteAsync(user);
+
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
