@@ -20,3 +20,55 @@ html {
 body {
   /*margin-bottom: 60px;*/
 }
+
+.profile-container {
+    max-width: 600px; /* Limit the width of the profile container */
+    margin: 0 auto; /* Center the container */
+    text-align: center; /* Center text */
+    padding: 20px; /* Add some padding */
+    border: 1px solid #ccc; /* Optional: add a border */
+    border-radius: 8px; /* Optional: rounded corners */
+    background-color: #f9f9f9; /* Optional: background color */
+}
+
+.profile-info {
+    margin: 20px 0; /* Add space above and below the profile info */
+}
+
+.profile-picture {
+    border-radius: 50%; /* Make the profile picture circular */
+    width: 150px; /* Width of the profile picture */
+    height: 150px; /* Height of the profile picture */
+    object-fit: cover; /* Ensure the image covers the entire area */
+}
+
+.rounded-circle {
+    border-radius: 50%; /* Makes the image circular */
+}
+
+/* Navbar Styles */
+.navbar-nav {
+    display: flex; /* Ensures items are aligned in a row */
+    align-items: center; /* Vertically centers items */
+    padding: 5px 10px; /* Reduce padding around the navbar */
+}
+
+.navbar-profile-pic {
+    width: 40px; /* Set the desired size */
+    height: 40px; /* Set the desired size */
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Ensure the image covers the entire area */
+}
+
+/* Optional: Customize button styles in navbar */
+.nav-link {
+    padding: 0px 5px; /* Adjust padding for better spacing */
+}
+
+.nav-item {
+    margin-left: 10px; /* Add space between navbar items */
+}
+
+h1 {
+    text-align: center;
+}

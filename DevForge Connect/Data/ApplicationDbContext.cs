@@ -19,6 +19,12 @@ namespace DevForge_Connect.Data
                 .Property(i => i.OfferAmount)
                 .HasColumnType("money");
 
+            builder.Entity<UserTeam>()
+                .HasOne(ut => ut.User)
+                .WithMany(u => u.UserTeams)
+                .HasForeignKey(ut => ut.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
 
         public DbSet<ProjectSubmission> ProjectSubmissions { get; set; }
@@ -27,5 +33,6 @@ namespace DevForge_Connect.Data
         public DbSet<Team> Teams { get; set; }
         public DbSet<UserTeam> UserTeams { get; set; }
         public DbSet<TeamInvite> TeamInvites { get; set; }
+        public DbSet<UserProfile> UserProfile { get; set; } = default!;
     }
 }

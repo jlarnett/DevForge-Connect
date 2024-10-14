@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using DevForge_Connect.Entities.Identity;
+using DevForge_Connect.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -56,6 +57,15 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+
+            [Required]
+            [Display(Name = "First name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last name")]
+            public string LastName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -70,6 +80,8 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 PhoneNumber = phoneNumber
             };
         }
@@ -98,6 +110,19 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account.Manage
             {
                 await LoadAsync(user);
                 return Page();
+            }
+
+            if (Input.FirstName != user.FirstName || Input.LastName != user.LastName)
+            {
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to update profile.";
+                    return RedirectToPage();
+                }
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
