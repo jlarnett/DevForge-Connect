@@ -12,6 +12,9 @@ namespace DevForge_Connect.Entities
         public DateTime Deadline { get; set; }
         public string Funding { get; set; } = string.Empty;
 
+        public string AIGeneratedSummary { get; set; } = string.Empty;
+        public string? NlpTags { get; set; } = string.Empty;
+
         [AllowNull]
         public string? creatorId { get; set; }
 
