@@ -4,6 +4,7 @@ using DevForge_Connect.SendGrid.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using DevForge_Connect.Entities.Identity;
+using DevForge_Connect.Services.NLP_Translator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 using SignalRChat.Hubs;
@@ -43,6 +44,8 @@ namespace SignalRChat
             });
 
             services.AddHostedService<PythonServerHostedService>();
+
+            services.AddTransient<ITranslator, NLTranslator>();
 
             services.Configure<IdentityOptions>(options =>
             {

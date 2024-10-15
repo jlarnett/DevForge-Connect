@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
 using DevForge_Connect.Entities.Identity;
+using DevForge_Connect.Services.NLP_Translator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
@@ -23,11 +24,13 @@ namespace DevForge_Connect.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ITranslator _translator;
 
-        public ProjectSubmissionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ProjectSubmissionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITranslator translator)
         {
             _context = context;
             _userManager = userManager;
+            _translator = translator;
         }
 
         // GET: ProjectSubmissions
@@ -88,7 +91,7 @@ namespace DevForge_Connect.Controllers
             projectSubmission.creatorId = _userManager.GetUserId(User);
 
             //Get the NLP tags associated with project submission and assign to project
-            projectSubmission.NlpTags = await CreateNlpTags(projectSubmission.Description);
+            projectSubmission.NlpTags = await _translator.GetNlpTags(projectSubmission.Description);
 
             if (ModelState.IsValid)
             {
@@ -202,43 +205,7 @@ namespace DevForge_Connect.Controllers
             public List<string> MyArray { get; set; }
         }
 
-        /// <summary>
-        /// Calls the NLP Endpoint with the passed in description
-        /// Concatenates the tag list into a singular string that can be later split 
-        /// </summary>
-        /// <param name="description">project submission description</param>
-        /// <returns></returns>
-        private async Task<string> CreateNlpTags(string description) 
-        {
-            HttpClient client = new HttpClient();
 
-            var uri = new Uri($"http://localhost:8000/textPrediction?text='{description}'");
-
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            HttpResponseMessage response = await client.GetAsync(uri);
-
-            response.EnsureSuccessStatusCode();
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            var obj = JArray.Parse(responseString);
-            var values = obj.Values().ToList();
-            StringBuilder builder = new StringBuilder();
-
-            int counter = 0;
-
-            foreach(var value in values)
-            {
-                if(!counter.Equals(0)) builder.Append("|");
-                builder.Append(value.Value<string>());
-                counter++;
-            }
-
-            client.Dispose();
-            return builder.ToString();
-        }
     }
 
 
