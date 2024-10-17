@@ -5,7 +5,7 @@
 namespace DevForge_Connect.Migrations
 {
     /// <inheritdoc />
-    public partial class teaminvite : Migration
+    public partial class removeRequiredCreatorId2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -157,6 +157,10 @@ namespace DevForge_Connect.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AIGeneratedSummary")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Deadline")
                         .HasColumnType("datetime2");
 
@@ -166,6 +170,9 @@ namespace DevForge_Connect.Migrations
 
                     b.Property<string>("Funding")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NlpTags")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("StatusId")
@@ -285,11 +292,10 @@ namespace DevForge_Connect.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -464,7 +470,7 @@ namespace DevForge_Connect.Migrations
                         .HasForeignKey("StatusId");
 
                     b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("ProjectBids")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -483,7 +489,7 @@ namespace DevForge_Connect.Migrations
                         .HasForeignKey("StatusId");
 
                     b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "Creator")
-                        .WithMany()
+                        .WithMany("ProjectSubmissions")
                         .HasForeignKey("creatorId");
 
                     b.Navigation("Creator");
@@ -533,15 +539,12 @@ namespace DevForge_Connect.Migrations
                 {
                     b.HasOne("DevForge_Connect.Entities.Team", "Team")
                         .WithMany("UserTeams")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamId");
 
                     b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
                         .WithMany("UserTeams")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Team");
 
@@ -601,6 +604,10 @@ namespace DevForge_Connect.Migrations
 
             modelBuilder.Entity("DevForge_Connect.Entities.Identity.ApplicationUser", b =>
                 {
+                    b.Navigation("ProjectBids");
+
+                    b.Navigation("ProjectSubmissions");
+
                     b.Navigation("TeamInvites");
 
                     b.Navigation("UserTeams");

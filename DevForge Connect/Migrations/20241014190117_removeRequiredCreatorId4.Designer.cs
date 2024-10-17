@@ -12,18 +12,33 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevForge_Connect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240917152014_statusTable3")]
-    partial class statusTable3
+    [Migration("20241014190117_removeRequiredCreatorId4")]
+    partial class removeRequiredCreatorId4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ApplicationUserTeam", b =>
+                {
+                    b.Property<int>("TeamsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TeamsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ApplicationUserTeam");
+                });
 
             modelBuilder.Entity("DevForge_Connect.Entities.Identity.ApplicationUser", b =>
                 {
@@ -43,6 +58,14 @@ namespace DevForge_Connect.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -184,6 +207,102 @@ namespace DevForge_Connect.Migrations
                     b.ToTable("Statuses");
                 });
 
+            modelBuilder.Entity("DevForge_Connect.Entities.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.TeamInvite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("TeamId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TeamInvites");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.UserProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserProfile");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.UserTeam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTeams");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -321,6 +440,21 @@ namespace DevForge_Connect.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ApplicationUserTeam", b =>
+                {
+                    b.HasOne("DevForge_Connect.Entities.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DevForge_Connect.Entities.ProjectBid", b =>
                 {
                     b.HasOne("DevForge_Connect.Entities.ProjectSubmission", "Project")
@@ -332,7 +466,7 @@ namespace DevForge_Connect.Migrations
                         .HasForeignKey("StatusId");
 
                     b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("ProjectBids")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -351,12 +485,66 @@ namespace DevForge_Connect.Migrations
                         .HasForeignKey("StatusId");
 
                     b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "Creator")
-                        .WithMany()
+                        .WithMany("ProjectSubmissions")
                         .HasForeignKey("creatorId");
 
                     b.Navigation("Creator");
 
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.TeamInvite", b =>
+                {
+                    b.HasOne("DevForge_Connect.Entities.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DevForge_Connect.Entities.Team", "InvitingTeam")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("TeamInvites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InvitingTeam");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.UserProfile", b =>
+                {
+                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.UserTeam", b =>
+                {
+                    b.HasOne("DevForge_Connect.Entities.Team", "Team")
+                        .WithMany("UserTeams")
+                        .HasForeignKey("TeamId");
+
+                    b.HasOne("DevForge_Connect.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("UserTeams")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Team");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -410,9 +598,25 @@ namespace DevForge_Connect.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DevForge_Connect.Entities.Identity.ApplicationUser", b =>
+                {
+                    b.Navigation("ProjectBids");
+
+                    b.Navigation("ProjectSubmissions");
+
+                    b.Navigation("TeamInvites");
+
+                    b.Navigation("UserTeams");
+                });
+
             modelBuilder.Entity("DevForge_Connect.Entities.ProjectSubmission", b =>
                 {
                     b.Navigation("Bids");
+                });
+
+            modelBuilder.Entity("DevForge_Connect.Entities.Team", b =>
+                {
+                    b.Navigation("UserTeams");
                 });
 #pragma warning restore 612, 618
         }
