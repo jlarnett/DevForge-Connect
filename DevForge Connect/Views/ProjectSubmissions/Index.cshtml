@@ -1,4 +1,7 @@
-﻿@model IEnumerable<DevForge_Connect.Entities.ProjectSubmission>
+﻿@using DevForge_Connect.Services.NLP_Translator
+@using Microsoft.IdentityModel.Tokens
+@model IEnumerable<DevForge_Connect.Entities.ProjectSubmission>
+@inject ITranslator _nlTranslator
 
 @{
     ViewData["Title"] = "Index";
@@ -14,11 +17,8 @@
     <table class="table stripe" id="ProjectTable" data-page-length="25">
         <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
             <th class="col-6">
-                @Html.DisplayNameFor(model => model.Description)
+                Project Information
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Deadline)
@@ -35,11 +35,39 @@
         <tbody>
         @foreach (var item in Model) {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
                 <td class="col-6" style="white-space: pre-line">
+                    <div class="h3 fw-bold">@item.Title</div>
                     @Html.DisplayFor(modelItem => item.Description)
+                    @{
+                        if (item.NlpTags != null && !item.NlpTags.IsNullOrEmpty())
+                        {
+                            <div>
+                                <div class="h5 fw-bold">
+                                    NLP Tags
+                                    <div class="row">
+                                    @{
+                                        // TODO - Make it so the badge color matches whether the current user has this skill
+                                        bool tagColor = false;
+                                        var tags = _nlTranslator.DecatNlpTags(item.NlpTags);
+                                        foreach (var tag in tags)
+                                        {
+                                            if (tagColor)
+                                            {
+                                                <span class="badge badge-pill bg-danger col-2 m-1">@tag</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill bg-success col-2 m-1">@tag</span>
+                                            }
+
+                                            tagColor = !tagColor;
+                                        }
+                                    }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Deadline)

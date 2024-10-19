@@ -36,7 +36,7 @@ function SendMessageGemini(message) {
             if (today.getMinutes() < 9) { var time = today.getHours() + ":0" + today.getMinutes(); }
             else { var time = today.getHours() + ":" + today.getMinutes(); }
 
-            var encodedMsg = "<div class='border border-primary rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + data + "</p></div>";
+            var encodedMsg = "<div class='border border-primary rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line'>    " + data + "</p></div>";
             var element = document.createElement("div");
             element.innerHTML = encodedMsg;
             document.getElementById("messages").appendChild(element);
