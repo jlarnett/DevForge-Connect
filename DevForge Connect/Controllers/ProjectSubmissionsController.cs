@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Security.Cryptography.Xml;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DevForge_Connect.Data;
+﻿using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
 using DevForge_Connect.Entities.Identity;
 using DevForge_Connect.Services.NLP_Translator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevForge_Connect.Controllers
 {
@@ -32,6 +22,7 @@ namespace DevForge_Connect.Controllers
             _userManager = userManager;
             _translator = translator;
         }
+
 
         // GET: ProjectSubmissions
         [Authorize]
