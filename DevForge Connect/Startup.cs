@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 using SignalRChat.Hubs;
 
-namespace SignalRChat
+namespace DevForge_Connect
 {
     public class Startup
     {

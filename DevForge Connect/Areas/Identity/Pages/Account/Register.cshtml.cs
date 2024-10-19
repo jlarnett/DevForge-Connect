@@ -30,13 +30,15 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +46,8 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
+
         }
 
         /// <summary>
@@ -138,6 +142,12 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                if (!_roleManager.RoleExistsAsync("client").GetAwaiter().GetResult())
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("client"));
+                    await _roleManager.CreateAsync(new IdentityRole("developer"));
+                }
 
                 if (result.Succeeded)
                 {
