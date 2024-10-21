@@ -144,10 +144,13 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (!_roleManager.RoleExistsAsync("client").GetAwaiter().GetResult())
-                {
                     await _roleManager.CreateAsync(new IdentityRole("client"));
+
+                if(!await _roleManager.RoleExistsAsync("developer"))
                     await _roleManager.CreateAsync(new IdentityRole("developer"));
-                }
+
+                if(!await _roleManager.RoleExistsAsync("admin"))
+                    await _roleManager.CreateAsync(new IdentityRole("admin"));
 
                 if (result.Succeeded)
                 {
