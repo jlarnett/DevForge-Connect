@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DevForge_Connect.Services.NLP_Translator
@@ -13,22 +14,27 @@ namespace DevForge_Connect.Services.NLP_Translator
         /// </summary>
         /// <param name="description">project submission description</param>
         /// <returns></returns>
-        public async Task<string> GetNlpTags(string description) 
+        public async Task<string> GetNlpTags(string[] description) 
         {
-            HttpClient client = new HttpClient();
+			using (HttpClient client = new HttpClient())
+			{
+				var uri = new Uri("http://127.0.0.1:8000/textPrediction");
 
-            var uri = new Uri($"http://localhost:8000/textPrediction?text='{description}'");
+				// Convert the array to a JSON string
+				var jsonContent = JsonConvert.SerializeObject(new { text = description });
 
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				// Create the HTTP content with the JSON payload
+				var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.GetAsync(uri);
-            response.EnsureSuccessStatusCode();
-            var responseString = await response.Content.ReadAsStringAsync();
+				// Send the POST request
+				HttpResponseMessage response = await client.PostAsync(uri, content);
+				response.EnsureSuccessStatusCode();
 
-            client.Dispose();
-            return ConcatNlpTags(JArray.Parse(responseString));
-        }
+				// Read and return the response content as a string
+				var responseString = await response.Content.ReadAsStringAsync();
+				return responseString;
+			}
+		}
 
         /// <summary>
         /// Parses JArray into 

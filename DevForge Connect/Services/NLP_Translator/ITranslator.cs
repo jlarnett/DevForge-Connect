@@ -4,7 +4,7 @@ namespace DevForge_Connect.Services.NLP_Translator
 {
     public interface ITranslator
     {
-        Task<string> GetNlpTags(string description);
+        Task<string> GetNlpTags(string[] description);
         string ConcatNlpTags(JArray obj);
         List<string> DecatNlpTags(string tagString);
     }
