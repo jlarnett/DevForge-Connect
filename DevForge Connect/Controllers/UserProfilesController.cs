@@ -157,9 +157,6 @@ namespace DevForge_Connect.Controllers
                 return Unauthorized();
             }
 
-            /*if (currentUser != null)
-                userProfile.UserId = currentUser.Id;*/
-
             userProfile.Bio = updatedProfile.Bio;
             if (profilePicture != null && profilePicture.Length > 0)
             {
@@ -243,12 +240,12 @@ namespace DevForge_Connect.Controllers
         {
             var userProfile = _context.UserProfile.FirstOrDefault(u => u.UserId == userId);
 
-            if (userProfile == null || userProfile.ProfilePicture == null)
+            if (userProfile != null && userProfile.ProfilePicture != null)
             {
-                return File("~/images/default-pfp.jpeg", "image/jpeg");
+                return File(userProfile.ProfilePicture, "image/jpeg");
             }
 
-            return File(userProfile.ProfilePicture, "image/jpeg");
+            return File("~/images/default-pfp.jpeg", "image/jpeg");
         }
     }
 }
