@@ -84,12 +84,25 @@ namespace DevForge_Connect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,Bio,ProfilePicture")] UserProfile userProfile)
+        public async Task<IActionResult> Create([Bind("Id,UserId,Bio,Expirience,ProfilePicture")] UserProfile userProfile, IFormFile profilePicture)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
             if (currentUser != null)
                 userProfile.UserId = currentUser.Id;
+
+            if (profilePicture != null && profilePicture.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await profilePicture.CopyToAsync(memoryStream);
+                    userProfile.ProfilePicture = memoryStream.ToArray();
+                }
+            }
+            else
+            {
+                ModelState.Remove("ProfilePicture");
+            }
 
             if (ModelState.IsValid)
             {
@@ -97,7 +110,7 @@ namespace DevForge_Connect.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userProfile.UserId);
+            
             return View(userProfile);
         }
 
