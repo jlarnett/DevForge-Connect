@@ -1,5 +1,7 @@
-﻿@model DevForge_Connect.Entities.ProjectSubmission
-
+﻿@using DevForge_Connect.Services.NLP_Translator
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model DevForge_Connect.Entities.ProjectSubmission
+@inject ITranslator _nlTranslator
 @{
     ViewData["Title"] = "Details";
 }
@@ -44,6 +46,31 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Status.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NlpTags)
+        </dt>
+        <dd class = "col-sm-10">
+            <div class="row">
+                @{
+                    // TODO - Make it so the badge color matches whether the current user has this skill
+                    bool tagColor = false;
+                    var tags = _nlTranslator.DecatNlpTags(Model.NlpTags);
+                    foreach (var tag in tags)
+                    {
+                        if (tagColor)
+                        {
+                            <span class="badge badge-pill bg-danger col-2 m-1">@tag</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-pill bg-success col-2 m-1">@tag</span>
+                        }
+
+                        tagColor = !tagColor;
+                    }
+                }
+            </div>
         </dd>
     </dl>
 </div>

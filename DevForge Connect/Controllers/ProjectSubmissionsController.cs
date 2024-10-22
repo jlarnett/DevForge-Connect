@@ -119,7 +119,7 @@ namespace DevForge_Connect.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Deadline,Funding,creatorId,StatusId")] ProjectSubmission projectSubmission)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId")] ProjectSubmission projectSubmission)
         {
             if (id != projectSubmission.Id)
             {
@@ -128,6 +128,13 @@ namespace DevForge_Connect.Controllers
 
             if (ModelState.IsValid)
             {
+
+                //Assign the current user to project submission
+                projectSubmission.creatorId = _userManager.GetUserId(User);
+
+                //Get the NLP tags associated with project submission and assign to project
+                projectSubmission.NlpTags = await _translator.GetNlpTags(projectSubmission.Description);
+
                 try
                 {
                     _context.Update(projectSubmission);

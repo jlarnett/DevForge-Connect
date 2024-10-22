@@ -1,55 +1,115 @@
 ﻿@model DevForge_Connect.Entities.ProjectSubmission
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Create";
+
 }
+<style>
+    .open-button {
+        background-color: #555;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        opacity: 0.8;
+        position: fixed;
+        bottom: 23px;
+        right: 28px;
+        width: 280px;
+    }
+
+    .chat-popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 15px;
+        border: 3px solid black;
+        z-index: 9;
+    }
+
+    .form-container {
+        max-width: 400px;
+        padding: 10px;
+        background-color: lightgrey;
+</style>
 
 
-<h4 class="text-center">Edit Project</h4>
+<h4 class="text-center">Submit Project Idea</h4>
 <hr />
 <div class="row">
     <div class="col"></div>
-    <div class="col-8 border border-primary p-2 rounded-4">
+    <div class="col-6 border border-primary p-2 rounded-4 m-2">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id"/>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control"/>
+                <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control"/>
+                <textarea asp-for="Description" class="form-control" style="height: 400px;"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Deadline" class="control-label"></label>
-                <input asp-for="Deadline" class="form-control"/>
+                <input asp-for="Deadline" class="form-control" />
                 <span asp-validation-for="Deadline" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Funding" class="control-label"></label>
-                <input asp-for="Funding" class="form-control"/>
+                <input asp-for="Funding" class="form-control" />
                 <span asp-validation-for="Funding" class="text-danger"></span>
             </div>
+            @Html.HiddenFor(p => p.creatorId)
             <div class="form-group">
-                <label asp-for="creatorId" class="control-label"></label>
-                <select asp-for="creatorId" class="form-control" asp-items="ViewBag.creatorId"></select>
-                <span asp-validation-for="creatorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary"/>
+                <input type="submit" value="Edit" class="btn btn-primary" />
             </div>
         </form>
     </div>
-    <div class="col"></div>
+    <div class="col">
+        <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+        <div class="chat-popup form-container" id="myForm">
+            <h1>Chat Bot</h1>
+            <div class="overflow-auto" style="max-height: 400px;">
+                <div id="messages" style="overflow-anchor:none"></div>
+
+                <hr />
+
+                <div class="input-group mb-3">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
+
+                    <div class="input-group-append">
+                        <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <hr />
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
+<script>
+    function openForm() {
+        document.getElementById("myForm").style.display = "block";
+        document.getElementById("openBtn").style.display = "none";
+    }
+
+    function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+        document.getElementById("openBtn").style.display = "block";
+    }
+</script>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
+    <script type="text/javascript" src="~/js/LLM_API/api.js"></script>
 }
