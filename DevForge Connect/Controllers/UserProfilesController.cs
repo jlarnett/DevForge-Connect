@@ -40,7 +40,21 @@ namespace DevForge_Connect.Controllers
 
             if (userProfile == null)
             {
-                return RedirectToAction("Create");
+                var default_PFP_Path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "default-pfp.jpeg");
+                byte[] defaultPFP = System.IO.File.ReadAllBytes(default_PFP_Path);
+
+                userProfile = new UserProfile
+                {
+                    UserId = userId,
+                    Bio = "None",
+                    Expirience = "None",
+                    ProfilePicture = defaultPFP
+                };
+
+                _context.UserProfile.Add(userProfile);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
 
             return View(userProfile);
