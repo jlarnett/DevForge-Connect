@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
+using Microsoft.AspNetCore.Components.RenderTree;
 
 namespace DevForge_Connect.Controllers
 {
@@ -93,6 +94,61 @@ namespace DevForge_Connect.Controllers
             }
 
             return RedirectToAction("Details", "Teams", new {id=teamInvite.TeamId, errorMessage="error sending team invite, user not defined"} );
+        }
+
+        public async Task<IActionResult> AcceptTeamInvite(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var teamInvite = await _context.TeamInvites.FindAsync(id);
+
+            if (teamInvite == null)
+            {
+                return NotFound();
+            }
+
+            teamInvite.StatusId = 2;
+            await _context.SaveChangesAsync();
+
+            await _context.UserTeams.AddAsync(new UserTeam()
+            {
+                TeamId = teamInvite.TeamId,
+                UserId = teamInvite.UserId
+            });
+
+            var changes = await _context.SaveChangesAsync();
+
+            if (changes > 0)
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+            return BadRequest();
+        }
+
+        public async Task<IActionResult> DeclineTeamInvite(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var teamInvite = await _context.TeamInvites.FindAsync(id);
+
+            if (teamInvite == null)
+                return NotFound();
+
+            //Change the statusId to 3 declined
+            teamInvite.StatusId = 3;
+            var changes = await _context.SaveChangesAsync();
+
+            if (changes > 0)
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+            return BadRequest();
         }
 
         // GET: TeamInvites/Edit/5
