@@ -26,29 +26,42 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="ProjectSubmissions" asp-action="Index">Projects</a>
                         </li>
+
+                        @{
+                            if(User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Status" asp-action="Index">Statuses</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Administration" asp-action="CreateRole">Create Role</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="UserTeams" asp-action="Index">User Teams</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="ProjectBids" asp-action="Index">Bids</a>
+                                </li>
+                            }
+
+                            if(User.IsInRole("Admin") || User.IsInRole("Developer"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="ProjectBids" asp-action="Index">Bids</a>
+                                </li>
+                            }
+                        }
+
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="ProjectBids" asp-action="Index">Bids</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Teams" asp-action="Index">My Teams</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Status" asp-action="Index">Statuses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Teams" asp-action="Index">Teams</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="UserTeams" asp-action="Index">User Teams</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Administration" asp-action="CreateRole">Create Role</a>
-                        </li>
+
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
