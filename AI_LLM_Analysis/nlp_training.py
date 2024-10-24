@@ -20,6 +20,9 @@ textcat.add_label("WEB_DEVELOPMENT")
 textcat.add_label("GAME_DEVELOPMENT")
 textcat.add_label("MOBILE_DEVELOPMENT")
 textcat.add_label("IOT")
+textcat.add_label("NETWORK")
+textcat.add_label("OPERATING_SYSTEMS")
+
 
 # Initialize the model after adding the textcat and labels
 nlp.initialize()
