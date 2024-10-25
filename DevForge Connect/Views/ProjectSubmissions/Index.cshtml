@@ -39,7 +39,7 @@
             <tr>
                 <td class="col-6 m-auto text-center border-bottom" style="white-space: pre-line">
                     <div class="row border-bottom text-center">
-                            <div class="fw-bold h5">@item.Title</div>
+                                <a class="fw-bold h5 link-primary" asp-controller="ProjectSubmissions" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
                     </div>
                     @* @Html.DisplayFor(modelItem => item.Description) *@
                     
@@ -160,7 +160,7 @@
                     <tr>
                         <td class="col-6 m-auto text-center border-bottom" style="white-space: pre-line">
                             <div class="row border-bottom text-center">
-                                <div class="fw-bold h5">@item.Title</div>
+                                <a class="fw-bold h5 link-primary" asp-controller="ProjectSubmissions" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
                             </div>
                             @* @Html.DisplayFor(modelItem => item.Description) *@
 
@@ -197,44 +197,51 @@
                                                 <p class="text-end col fw-bold text-black">@item.Creator.Email</p>
                                             </div>
                                         </div>
-                                    
-                                    
+                                    <hr>
+                                    @{
+                                        if (item.NlpTags != null && !item.NlpTags.IsNullOrEmpty())
+                                        {
+                                            <div class="h5 fw-bold row">
+                                                <div class="row">
+                                                    <div class="col">NLP Tags</div>
+                                                </div>
+                                                <div class="row">
+                                                    @{
+                                                        // TODO - Make it so the badge color matches whether the current user has this skill
+                                                        <div class="col"></div>
+                                                        bool tagColor = false;
+                                                        var tags = _nlTranslator.DecatNlpTags(item.NlpTags);
+                                                        foreach (var tag in tags)
+                                                        {
+                                                            if (tagColor)
+                                                            {
+                                                                <span class="badge badge-pill bg-danger col-2 m-1">@tag</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge badge-pill bg-success col-2 m-1">@tag</span>
+                                                            }
+
+                                                            tagColor = !tagColor;
+                                                        }
+
+                                                        <div class="col"></div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <div class="row">
+                                        @if (User.IsInRole("admin"))
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary col">Edit</a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger col">Delete</a>
+                                        }
+                                    </div>
                                 </div>
                             }
 
-                            @{
-                                if (item.NlpTags != null && !item.NlpTags.IsNullOrEmpty())
-                                {
-                                    <div class="h5 fw-bold row">
-                                        <div class="row">
-                                            <div class="col">NLP Tags</div>
-                                        </div>
-                                        <div class="row">
-                                            @{
-                                                // TODO - Make it so the badge color matches whether the current user has this skill
-                                                <div class="col"></div>
-                                                bool tagColor = false;
-                                                var tags = _nlTranslator.DecatNlpTags(item.NlpTags);
-                                                foreach (var tag in tags)
-                                                {
-                                                    if (tagColor)
-                                                    {
-                                                        <span class="badge badge-pill bg-danger col-2 m-1">@tag</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="badge badge-pill bg-success col-2 m-1">@tag</span>
-                                                    }
-
-                                                    tagColor = !tagColor;
-                                                }
-
-                                                <div class="col"></div>
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                            }
+                            
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Deadline)

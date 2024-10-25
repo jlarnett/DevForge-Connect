@@ -112,9 +112,9 @@
                 @Html.DisplayFor(modelItem => item.Status.Description)
             </td>
             <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">More Details</a> |
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Accept</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger">Decline</a> |
+                <a asp-controller="ProjectBids" asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">More Details</a> |
+                <a asp-controller="ProjectBids"  asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Accept</a> |
+                <a asp-controller="ProjectBids" asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger">Decline</a> |
             </td>
         </tr>
     }
@@ -122,7 +122,10 @@
 </table>
 
 <div class="row">
-    <a class="btn btn-outline-success col" asp-action="Create" asp-controller="ProjectBids">Submit Bid</a>
+    @if (User.IsInRole("developer") || User.IsInRole("admin"))
+    {
+        <a class="btn btn-outline-success col" asp-action="Create" asp-controller="ProjectBids">Submit Bid</a>
+    }
 </div>
 
 <div>

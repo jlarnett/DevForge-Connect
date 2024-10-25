@@ -38,7 +38,7 @@
                         
                         @if (_signInManager.IsSignedIn(User))
                         {
-                            if(User.IsInRole("Admin"))
+                            if(User.IsInRole("admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-area="" asp-controller="Status" asp-action="Index">Statuses</a>
@@ -52,12 +52,9 @@
                                     <a class="nav-link text-light" asp-area="" asp-controller="UserTeams" asp-action="Index">User Teams</a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-light" asp-area="" asp-controller="ProjectBids" asp-action="Index">Bids</a>
-                                </li>
                             }
 
-                            if(User.IsInRole("Admin") || User.IsInRole("Developer"))
+                            if(User.IsInRole("admin") || User.IsInRole("developer"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-area="" asp-controller="ProjectBids" asp-action="Index">Bids</a>
@@ -73,10 +70,22 @@
                                     <div class="row">
                                         <div class="col">Notifications</div>
                                         @{
-                                            var requests = await _context.TeamInvites.Where(ti => ti.UserId.Equals(_userManager.GetUserId(User)) && ti.StatusId.Equals(1)).ToListAsync();
-                                            if (requests.Count > 0)
+                                            var requestsTeam = await _context.TeamInvites.Where(ti => ti.UserId.Equals(_userManager.GetUserId(User)) && ti.StatusId.Equals(1)).ToListAsync();
+                                            List<int> requestsBid = new List<int>();
+                                            foreach (var bid in _context.ProjectBids)
                                             {
-                                                <div class="col bg-danger rounded-4">@requests.Count</div>
+                                                var result = _context.ProjectSubmissions.Find(bid.ProjectId);
+                                                if (result.creatorId.Equals(_userManager.GetUserId(User)) && bid.StatusId.Equals(1))
+                                                {
+                                                    requestsBid.Add(result.Id);
+                                                }
+                                            }
+                                            var notificationCount = 0;
+                                            if (requestsTeam.Count > 0 || requestsBid.Count > 0)
+                                            {
+                                                notificationCount += @requestsTeam.Count;
+                                                notificationCount += @requestsBid.Count;
+                                                <div class="col bg-danger rounded-4">@notificationCount</div>
                                             }
                                         }
                                     </div>
@@ -91,28 +100,59 @@
                                             </div>
                                             <div class="modal-body">
                                                 @{
-                                                    var requests = await _context.TeamInvites.Include(p => p.InvitingTeam).Where(ti => ti.UserId.Equals(_userManager.GetUserId(User)) && ti.StatusId.Equals(1)).ToListAsync();
+                                                    var requestsTeam = await _context.TeamInvites.Where(ti => ti.UserId.Equals(_userManager.GetUserId(User)) && ti.StatusId.Equals(1)).Include(ti => ti.InvitingTeam).ToListAsync();
 
-                                                    if (requests.Count > 0)
+                                                    List<int> requestsBid = new List<int>();
+
+                                                    foreach (var bid in _context.ProjectBids)
                                                     {
-                                                        <div class="row d-flex justify-content-center">
+                                                        var result = _context.ProjectSubmissions.Find(bid.ProjectId);
+                                                        if (result.creatorId.Equals(_userManager.GetUserId(User)) && bid.StatusId.Equals(1))
+                                                        {
+                                                            requestsBid.Add(result.Id);
+                                                        }
+                                                    }
 
-                                                            @foreach (var request in requests)
+                                                    <div class="row d-flex justify-content-center">
+                                                        @if (requestsTeam.Count > 0 || requestsBid.Count > 0)
+                                                        {
+                                                            @foreach (var Team in requestsTeam)
                                                             {
-                                                                <div class="col">
-                                                                    @request.InvitingTeam.Name invited you too their team!
+                                                                <div class="col-6">
+                                                                    @Team.InvitingTeam.Name invited you to their team!
                                                                 </div>
-                                                                <a class="col btn btn-success p-auto" asp asp-controller="TeamInvites" asp-action="AcceptTeamInvite" asp-route-id="@request.Id">Accept</a>
-                                                                <a class="col btn btn-danger" asp-controller="TeamInvites" asp-action="DeclineTeamInvite" asp-route-id="@request.Id">Decline</a>
+                                                                <a class="col-2 btn btn-success p-auto"
+                                                                   asp-controller="TeamInvites"
+                                                                   asp-action="AcceptTeamInvite"
+                                                                   asp-route-id="@Team.Id">Accept</a>
+
+                                                                <a class="col-2 btn btn-danger"
+                                                                   asp-controller="TeamInvites"
+                                                                   asp-action="DeclineTeamInvite"
+                                                                   asp-route-id="@Team.Id">Decline</a>
+                                                                   <hr />
                                                             }
-                                                        </div>
-                                                    }
-                                                    else
-                                                    {
-                                                        <div class="col">
-                                                            No new notifications to show, go join some more projects
-                                                        </div>
-                                                    }
+                                                            @foreach (var request in requestsBid)
+                                                            {
+                                                                var result = _context.ProjectSubmissions.Find(request);
+                                                                <div class="col-8">
+                                                                    New Bid for your Project: @result.Title!
+                                                                </div>
+                                                                <a class="col-2 btn btn-primary"
+                                                                   asp-controller="ProjectSubmissions"
+                                                                   asp-action="Details"
+                                                                   asp-route-id="@request"
+                                                                   asp-route-requestsBid="@string.Join(",", requestsBid)">See Bid</a>
+                                                                <hr />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="col">
+                                                                No new notifications to show, go join some more projects.
+                                                            </div>
+                                                        }
+                                                    </div>
                                                 }
                                             </div>
                                         </div>
