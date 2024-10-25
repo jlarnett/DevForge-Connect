@@ -25,7 +25,9 @@
       "WEB_DEVELOPMENT",
       "GAME_DEVELOPMENT",
       "MOBILE_DEVELOPMENT",
-      "IOT"
+      "IOT",
+      "NETWORK",
+      "OPERATING_SYSTEMS"
     ]
   },
   "pipeline":[

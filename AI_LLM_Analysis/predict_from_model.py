@@ -1,6 +1,5 @@
 import spacy
 
-
 def spacy_prediction(text):
     nlp = spacy.load("trained_models")
 
@@ -8,13 +7,17 @@ def spacy_prediction(text):
     # Mapping of categories to specific technologies
     category_to_tech_map = {
         "STORAGE": ["MySQL", "PostgreSQL", "MongoDB", "Amazon S3", "Redis"],
-        "AI": ["TensorFlow", "PyTorch", "Scikit-learn", "OpenAI", "Keras"],
+        "AI": ["TensorFlow", "PyTorch", "Scikit-learn", "OpenAI", "Keras", "artificial intelligence", "matchine learning",
+               "MACHINE LEANRING", "Reinforcement Learning", "robot", "robotics"],
         "DATA_ANALYSIS": ["Pandas", "NumPy", "Tableau", "Jupyter Notebook", "Apache Spark"],
-        "COMMUNICATION": ["WebSockets", "RESTful APIs", "Twilio", "RabbitMQ", "GraphQL"],
-        "WEB_DEVELOPMENT": ["React", "Django", "Flask", "Angular", "Vue.js"],
+        "COMMUNICATION": ["WebSockets", "RESTful APIs", "Twilio", "RabbitMQ", "GraphQL", "TCPIP", "HTTPS" "SSL"],
+        "WEB_DEVELOPMENT": ["React", "Django", "Flask", "Angular", "Vue.js", "HTML", "html", "javascript", "JAVASCRIPT"],
         "GAME_DEVELOPMENT": ["Unity", "Unreal Engine", "C#", "OpenGL", "Blender"],
         "MOBILE_DEVELOPMENT": ["Flutter", "React Native", "Swift", "Kotlin", "Firebase"],
-        "IOT": ["MQTT", "Arduino", "Raspberry Pi", "AWS IoT Core", "Node-RED"]
+        "IOT": ["MQTT", "Arduino", "Raspberry Pi", "AWS IoT Core", "Node-RED", "wifi", "2.4GHZ", "5GHZ", "5ghz", "bluetooth"],
+        "NETWORK": ["Lan", "LAN", "local area network", "network", "DNS","firewall", "port", "ports", 
+                    "protocol", "protocols", "server farm", "IP", "WAN", "FIREWALL", "DHCP", "Server", "tcp", "tcp/ip"],
+        "OPERATING_SYSTEMS": ["WINDOWS", "LINUX", "KALI", "Kali", "windows", "linux", "kernal", "cpu scheduler", "Paging", "Virtual Memory", "c"],
     }
 
     # Example usage after classification
