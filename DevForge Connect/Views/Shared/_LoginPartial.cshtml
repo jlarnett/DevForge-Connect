@@ -11,7 +11,7 @@
     {
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="@Url.Action("GetProfilePicture", "UserProfiles", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier) })" alt="Profile Picture" class="navbar-profile-pic" />
+                <img src="@Url.Action("GetProfilePicture", "UserProfiles", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier), t = DateTime.Now.Ticks })" alt="Profile Picture" class="navbar-profile-pic" />
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                 <li>
