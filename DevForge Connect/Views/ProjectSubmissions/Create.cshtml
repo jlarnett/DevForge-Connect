@@ -37,9 +37,8 @@
 
 <h4 class="text-center">Submit Project Idea</h4>
 <hr />
-<div class="row">
-    <div class="col"></div>
-    <div class="col-6 border border-primary p-2 rounded-4 m-2">
+<div class="row p-4 ">
+    <div class="col-6 border border-primary p-2 rounded-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -68,26 +67,40 @@
             </div>
         </form>
     </div>
-<div class="col">
-    <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
-    <div class="chat-popup form-container" id="myForm">
-        <h1>Chat Bot</h1>
-        <div class="overflow-auto" style="max-height: 400px;">
-            <div id="messages" style="overflow-anchor:none"></div>
+    <div class="col-6 border border-1 rounded-3 bg-dark">
+        <div class="container-fluid">
+            <div class="row d-flex overflow-auto overflow-y-scroll" id="experimentalChat" style="height: 600px;">
+            </div>
+            <div class="row">
+                <div class="form-group col-9 p-0">
+                    <textarea class="form-control bg-dark text-light" type="text" style="height: 20px;" id="ExperimentalInput"></textarea>
+                    <span class="text-danger"></span>
+                </div>
+                <btn class="btn btn-dark col-3" id="ExperimentalSendChat">
+                    Talk to Gemini
+                </btn>
+            </div>
+        </div>
 
-            <hr/>
+        <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+        <div class="chat-popup form-container" id="myForm">
+            <h1>Chat Bot</h1>
+            <div class="overflow-auto" style="max-height: 400px;">
+                <div id="messages" style="overflow-anchor:none"></div>
 
-            <div class="input-group mb-3">
-                <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
+                <hr/>
 
-                <div class="input-group-append">
-                    <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+                <div class="input-group mb-3">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Send message"/>
+
+                    <div class="input-group-append">
+                        <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 <hr />
 
