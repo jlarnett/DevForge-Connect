@@ -1,4 +1,11 @@
-﻿@model IEnumerable<DevForge_Connect.Entities.ProjectSubmission>
+﻿@using DevForge_Connect.Entities.Identity
+@using DevForge_Connect.Services.NLP_Translator
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.IdentityModel.Tokens
+@model IEnumerable<DevForge_Connect.Entities.ProjectSubmission>
+@inject ITranslator _nlTranslator
+@inject UserManager<ApplicationUser> _userManager;
 
 @{
     ViewData["Title"] = "Index";
@@ -11,14 +18,11 @@
 </div>
 
 <div class="table-responsive" >
-    <table class="table stripe" id="ProjectTable" data-page-length="25">
+    <table class="table stripe" id="MyProjectTable" data-page-length="5">
         <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th class="col-6">
-                @Html.DisplayNameFor(model => model.Description)
+            <th class="col-10">
+                My Projects
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Deadline)
@@ -26,20 +30,98 @@
             <th>
                 @Html.DisplayNameFor(model => model.Funding)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Creator)
-            </th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
+        
         @foreach (var item in Model) {
+                @if (_userManager.GetUserId(User).Equals(@item.creatorId)){
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td class="col-6" style="white-space: pre-line">
-                    @Html.DisplayFor(modelItem => item.Description)
+                <td class="col-6 m-auto text-center border-bottom" style="white-space: pre-line">
+                    <div class="row border-bottom text-center">
+                            <div class="fw-bold h5">@item.Title</div>
+                    </div>
+                    @* @Html.DisplayFor(modelItem => item.Description) *@
+                    
+                            @{
+                                string description = "No Description Found"; // Initialize with a default value
+
+                                if (!string.IsNullOrEmpty(item.Description)) // Check if Description is NOT null or empty
+                                {
+                                    description = item.Description; // Assign item.Description to description
+                                }
+
+                                if (description.Length > 1000) // Truncate if the length exceeds 1000 characters
+                                {
+                                    description = description.Substring(0, 978) + "...";
+                                }
+
+                        
+                     
+                        <div class="row border-bottom">
+                            <div class="row text-start">
+                                <div class="col-1"></div>
+                                <div class="col">@description</div>
+                                <div class="col-1"></div>
+                            </div>
+                            @if (item.Description.Length > 1000)
+                            {
+                                <div class="text-end row">
+                                    <a class="btn btn-link text-end" asp-controller="ProjectSubmissions" asp-action="Details" asp-route-id="@item.Id">View More Details</a>
+                                </div>
+                            }
+                                <div class="text-end row fw-bold">
+                                    <div class="col"></div>
+                                    <div class="col-6 row">
+                                        <div class="col">Created By:</div>
+                                        <p class="text-end col fw-bold text-black">@item.Creator.Email</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                    @{
+                                        if (item.NlpTags != null && !item.NlpTags.IsNullOrEmpty())
+                                        {
+                                            <div class="h5 fw-bold row">
+                                                <div class="row">
+                                                    <div class="col">NLP Tags</div>
+                                                </div>
+                                                <div class="row">
+                                                    @{
+                                                        // TODO - Make it so the badge color matches whether the current user has this skill
+                                                        <div class="col"></div>
+                                                        bool tagColor = false;
+                                                        var tags = _nlTranslator.DecatNlpTags(item.NlpTags);
+                                                        foreach (var tag in tags)
+                                                        {
+                                                            if (tagColor)
+                                                            {
+                                                                <span class="badge badge-pill bg-danger col-2 m-1">@tag</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge badge-pill bg-success col-2 m-1">@tag</span>
+                                                            }
+
+                                                            tagColor = !tagColor;
+                                                        }
+
+                                                        <div class="col"></div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                            
+                            <div class="row">
+                               
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary col">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger col">Delete</a>
+                                
+                            </div>
+                        </div>
+                    }
+
+            
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Deadline)
@@ -47,16 +129,122 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Funding)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Creator.Email)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
             </tr>
         }
+        }
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive">
+    <table class="table stripe" id="ProjectTable" data-page-length="25">
+        <thead>
+            <tr>
+                <th class="col-10">
+                    All Projects
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Deadline)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Funding)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                @if (!(_userManager.GetUserId(User).Equals(@item.creatorId)))
+                {
+                    <tr>
+                        <td class="col-6 m-auto text-center border-bottom" style="white-space: pre-line">
+                            <div class="row border-bottom text-center">
+                                <div class="fw-bold h5">@item.Title</div>
+                            </div>
+                            @* @Html.DisplayFor(modelItem => item.Description) *@
+
+                            @{
+                                
+                                string description = "No Description Found"; // Initialize with a default value
+
+                                if (!string.IsNullOrEmpty(item.Description)) // Check if Description is NOT null or empty
+                                {
+                                    description = item.Description; // Assign item.Description to description
+                                }
+
+                                if (description.Length > 1000) // Truncate if the length exceeds 1000 characters
+                                {
+                                    description = description.Substring(0, 978) + "...";
+                                }
+
+                                <div class="row border-bottom">
+                                    <div class="row text-start">
+                                        <div class="col-1"></div>
+                                        <div class="col">@description</div>
+                                        <div class="col-1"></div>
+                                    </div>
+                                    @if (item.Description.Length > 1000)
+                                    {
+                                        <div class="text-end row">
+                                            <a class="btn btn-link text-end" asp-controller="ProjectSubmissions" asp-action="Details" asp-route-id="@item.Id">View More Details</a>
+                                        </div>
+                                    }
+                                    <div class="text-end row fw-bold">
+                                            <div class="col"></div>
+                                            <div class="col-6 row">
+                                                <div class="col">Created By:</div>
+                                                <p class="text-end col fw-bold text-black">@item.Creator.Email</p>
+                                            </div>
+                                        </div>
+                                    
+                                    
+                                </div>
+                            }
+
+                            @{
+                                if (item.NlpTags != null && !item.NlpTags.IsNullOrEmpty())
+                                {
+                                    <div class="h5 fw-bold row">
+                                        <div class="row">
+                                            <div class="col">NLP Tags</div>
+                                        </div>
+                                        <div class="row">
+                                            @{
+                                                // TODO - Make it so the badge color matches whether the current user has this skill
+                                                <div class="col"></div>
+                                                bool tagColor = false;
+                                                var tags = _nlTranslator.DecatNlpTags(item.NlpTags);
+                                                foreach (var tag in tags)
+                                                {
+                                                    if (tagColor)
+                                                    {
+                                                        <span class="badge badge-pill bg-danger col-2 m-1">@tag</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-pill bg-success col-2 m-1">@tag</span>
+                                                    }
+
+                                                    tagColor = !tagColor;
+                                                }
+
+                                                <div class="col"></div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Deadline)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Funding)
+                        </td>
+                    </tr>
+                }
+            }
         </tbody>
     </table>
 </div>

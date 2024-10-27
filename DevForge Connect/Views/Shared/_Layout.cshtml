@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using DevForge_Connect.Data
+@using DevForge_Connect.Entities.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext _context;
+@inject UserManager<ApplicationUser> _userManager;
+@inject SignInManager<ApplicationUser> _signInManager;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,29 +33,93 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="ProjectSubmissions" asp-action="Index">Projects</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="ProjectBids" asp-action="Index">Bids</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Status" asp-action="Index">Statuses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Teams" asp-action="Index">Teams</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="UserTeams" asp-action="Index">User Teams</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Administration" asp-action="CreateRole">Create Role</a>
-                        </li>
+                        
+                        @if (_signInManager.IsSignedIn(User))
+                        {
+                            if(User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Status" asp-action="Index">Statuses</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Administration" asp-action="CreateRole">Create Role</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="UserTeams" asp-action="Index">User Teams</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="ProjectBids" asp-action="Index">Bids</a>
+                                </li>
+                            }
+
+                            if(User.IsInRole("Admin") || User.IsInRole("Developer"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="ProjectBids" asp-action="Index">Bids</a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Teams" asp-action="Index">My Teams</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Teams" asp-action="Index" data-bs-toggle="modal" data-bs-target="#TeamRequestModal">
+                                    <div class="row">
+                                        <div class="col">Notifications</div>
+                                        @{
+                                            var requests = await _context.TeamInvites.Where(ti => ti.UserId.Equals(_userManager.GetUserId(User)) && ti.StatusId.Equals(1)).ToListAsync();
+                                            if (requests.Count > 0)
+                                            {
+                                                <div class="col bg-danger rounded-4">@requests.Count</div>
+                                            }
+                                        }
+                                    </div>
+                                </a>
+                                <!-- Modal -->
+                                <div class="modal fade" id="TeamRequestModal" tabindex="-1" aria-labelledby="TeamRequestModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Notifications</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @{
+                                                    var requests = await _context.TeamInvites.Include(p => p.InvitingTeam).Where(ti => ti.UserId.Equals(_userManager.GetUserId(User)) && ti.StatusId.Equals(1)).ToListAsync();
+
+                                                    if (requests.Count > 0)
+                                                    {
+                                                        <div class="row d-flex justify-content-center">
+
+                                                            @foreach (var request in requests)
+                                                            {
+                                                                <div class="col">
+                                                                    @request.InvitingTeam.Name invited you too their team!
+                                                                </div>
+                                                                <a class="col btn btn-success p-auto" asp asp-controller="TeamInvites" asp-action="AcceptTeamInvite" asp-route-id="@request.Id">Accept</a>
+                                                                <a class="col btn btn-danger" asp-controller="TeamInvites" asp-action="DeclineTeamInvite" asp-route-id="@request.Id">Decline</a>
+                                                            }
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col">
+                                                            No new notifications to show, go join some more projects
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

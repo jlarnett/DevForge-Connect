@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Security.Cryptography.Xml;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DevForge_Connect.Data;
+﻿using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
 using DevForge_Connect.Entities.Identity;
 using DevForge_Connect.Services.NLP_Translator;
@@ -20,6 +9,9 @@ using Newtonsoft.Json.Linq;
 using Microsoft.Identity.Client;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore
 
 namespace DevForge_Connect.Controllers
 {
@@ -35,6 +27,7 @@ namespace DevForge_Connect.Controllers
             _userManager = userManager;
             _translator = translator;
         }
+
 
         // GET: ProjectSubmissions
         [Authorize]
@@ -135,7 +128,7 @@ namespace DevForge_Connect.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Deadline,Funding,creatorId,StatusId")] ProjectSubmission projectSubmission)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId")] ProjectSubmission projectSubmission)
         {
             if (id != projectSubmission.Id)
             {
@@ -144,6 +137,13 @@ namespace DevForge_Connect.Controllers
 
             if (ModelState.IsValid)
             {
+
+                //Assign the current user to project submission
+                projectSubmission.creatorId = _userManager.GetUserId(User);
+
+                //Get the NLP tags associated with project submission and assign to project
+                projectSubmission.NlpTags = await _translator.GetNlpTags(projectSubmission.Description);
+
                 try
                 {
                     _context.Update(projectSubmission);

@@ -7,7 +7,9 @@
     "WEB_DEVELOPMENT",
     "GAME_DEVELOPMENT",
     "MOBILE_DEVELOPMENT",
-    "IOT"
+    "IOT",
+    "NETWORK",
+    "OPERATING_SYSTEMS"
   ],
   "threshold":0.5
 }

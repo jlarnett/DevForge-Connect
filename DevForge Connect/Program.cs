@@ -1,7 +1,8 @@
+using DevForge_Connect;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace SignalRChat
+namespace DevForge_Connect
 {
     public class Program
     {
