@@ -11,7 +11,7 @@ using System.Net.WebSockets;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore
+using Microsoft.EntityFrameworkCore;
 
 namespace DevForge_Connect.Controllers
 {
