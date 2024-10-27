@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Identity.Client;
+using System.Net.WebSockets;
+using System.Text.RegularExpressions;
 
 namespace DevForge_Connect.Controllers
 {
@@ -90,8 +93,12 @@ namespace DevForge_Connect.Controllers
             //Assign the current user to project submission
             projectSubmission.creatorId = _userManager.GetUserId(User);
 
+            //Convert project description into the string array
+            string[] stringArrayDescription= Regex.Split(projectSubmission.Description, @"(?<=[.!?])\s+");
+
             //Get the NLP tags associated with project submission and assign to project
-            projectSubmission.NlpTags = await _translator.GetNlpTags(projectSubmission.Description);
+
+            projectSubmission.NlpTags = await _translator.GetNlpTags(stringArrayDescription);
 
             if (ModelState.IsValid)
             {

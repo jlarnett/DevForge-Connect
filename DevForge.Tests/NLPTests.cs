@@ -1,6 +1,8 @@
 using DevForge_Connect.Services.NLP_Translator;
 
 using DevForge_Connect.Services.ChatBot;
+using DevForge_Connect.Entities;
+using System.Text.RegularExpressions;
 
 namespace DevForge.Tests
 {
@@ -25,7 +27,11 @@ namespace DevForge.Tests
 		public async Task VerifyLLMOuputAsync()
 		{
 			ITranslator translator = new NLTranslator();
-			string[] input = new string[] { "I want to create a storage app on mobile devices", "I want to build an ai gaming engine", "I want to communicate with customers" };
+			
+			string nonFormatedString = "I want to create a storage app on mobile devices. I want to build an ai gaming engine.  I want to communicate with customers";
+			string[] input = Regex.Split(nonFormatedString, @"(?<=[.!?])\s+");
+
+
 
 			var response = await translator.GetNlpTags(input);
 
