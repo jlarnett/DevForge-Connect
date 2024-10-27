@@ -10,6 +10,7 @@ namespace DevForge_Connect.Entities
 
         [Required] public string? UserId { get; set; }
         public string? Bio { get; set; }
+        public string? Expirience { get; set; }
         public byte[]? ProfilePicture { get; set; }
 
         //Navigation Properties
