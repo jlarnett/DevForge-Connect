@@ -26,6 +26,13 @@ function SendMessageGemini(message) {
                 element.innerHTML = encodedMsg;
                 document.getElementById("messages").appendChild(element);
 
+
+                var encodedMsg = "<div class='border border-primary rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + "    I could not process the message. Please try again." + "</p></div>";
+                var experimentalElement = element.cloneNode(true);
+                experimentalElement.classList.add("row");
+                experimentalElement.innerHTML = encodedMsg;
+
+                document.getElementById("experimentalChat").appendChild(experimentalElement);
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
@@ -41,6 +48,11 @@ function SendMessageGemini(message) {
             element.innerHTML = encodedMsg;
             document.getElementById("messages").appendChild(element);
 
+            var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + data + "</p></div>";
+            var experimentalElement = element.cloneNode(true);
+            experimentalElement.innerHTML = encodedMsg;
+            experimentalElement.classList.add("row");
+            document.getElementById("experimentalChat").appendChild(experimentalElement);
         })
         .catch(error => {
             var today = new Date();
@@ -52,6 +64,11 @@ function SendMessageGemini(message) {
             element.innerHTML = encodedMsg;
             document.getElementById("messages").appendChild(element);
 
+            var encodedMsg = "<div class='rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + "    I could not process the message due to "+ error +". Please try again." + "</p></div>";
+            var experimentalElement = element.cloneNode(true);
+            experimentalElement.innerHTML = encodedMsg;
+            experimentalElement.classList.add("row");
+            document.getElementById("experimentalChat").appendChild(experimentalElement);
             console.error('Fetch error:', error);
         })
 }
