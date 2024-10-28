@@ -40,7 +40,21 @@ namespace DevForge_Connect.Controllers
 
             if (userProfile == null)
             {
-                return RedirectToAction("Create");
+                var default_PFP_Path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "default-pfp.jpeg");
+                byte[] defaultPFP = System.IO.File.ReadAllBytes(default_PFP_Path);
+
+                userProfile = new UserProfile
+                {
+                    UserId = userId,
+                    Bio = "",
+                    Expirience = "",
+                    ProfilePicture = defaultPFP
+                };
+
+                _context.UserProfile.Add(userProfile);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
 
             return View(userProfile);
@@ -70,10 +84,9 @@ namespace DevForge_Connect.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Create a new profile for the current user
             var userProfile = new UserProfile
             {
-                UserId = currentUserId // Set the current user's ID
+                UserId = currentUserId
             };
 
             return View(userProfile);
@@ -84,12 +97,26 @@ namespace DevForge_Connect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,Bio,ProfilePicture")] UserProfile userProfile)
+        public async Task<IActionResult> Create([Bind("Id,UserId,Bio,Expirience,ProfilePicture")] UserProfile userProfile, IFormFile profilePicture)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
             if (currentUser != null)
                 userProfile.UserId = currentUser.Id;
+
+
+            if (profilePicture != null && profilePicture.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await profilePicture.CopyToAsync(memoryStream);
+                    userProfile.ProfilePicture = memoryStream.ToArray();
+                }
+            }
+            else
+            {
+                ModelState.Remove("ProfilePicture");
+            }
 
             if (ModelState.IsValid)
             {
@@ -97,7 +124,7 @@ namespace DevForge_Connect.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userProfile.UserId);
+
             return View(userProfile);
         }
 
@@ -115,7 +142,6 @@ namespace DevForge_Connect.Controllers
                 return NotFound();
             }
 
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userProfile.UserId);
             return View(userProfile);
         }
 
@@ -144,10 +170,8 @@ namespace DevForge_Connect.Controllers
                 return Unauthorized();
             }
 
-            /*if (currentUser != null)
-                userProfile.UserId = currentUser.Id;*/
-
             userProfile.Bio = updatedProfile.Bio;
+            userProfile.Expirience = updatedProfile.Expirience;
             if (profilePicture != null && profilePicture.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
@@ -183,7 +207,7 @@ namespace DevForge_Connect.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userProfile.UserId);
+            
             return View(userProfile);
         }
 
@@ -230,12 +254,12 @@ namespace DevForge_Connect.Controllers
         {
             var userProfile = _context.UserProfile.FirstOrDefault(u => u.UserId == userId);
 
-            if (userProfile == null || userProfile.ProfilePicture == null)
+            if (userProfile != null && userProfile.ProfilePicture != null)
             {
-                return File("~/images/default-pfp.jpeg", "image/jpeg");
+                return File(userProfile.ProfilePicture, "image/jpeg");
             }
 
-            return File(userProfile.ProfilePicture, "image/jpeg");
+            return File("~/images/default-pfp.jpeg", "image/jpeg");
         }
     }
 }
