@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using DevForge_Connect.Entities.Identity;
+using DevForge_Connect.Services.NLP_Translator;
 
 namespace DevForge_Connect.Controllers
 {
@@ -19,11 +20,13 @@ namespace DevForge_Connect.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ITranslator _nlTranslator;
 
-        public UserProfilesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UserProfilesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITranslator nlTranslator)
         {
             _context = context;
             _userManager = userManager;
+            _nlTranslator = nlTranslator;
         }
 
         // GET: UserProfiles
@@ -172,6 +175,7 @@ namespace DevForge_Connect.Controllers
 
             userProfile.Bio = updatedProfile.Bio;
             userProfile.Expirience = updatedProfile.Expirience;
+
             if (profilePicture != null && profilePicture.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
@@ -191,6 +195,7 @@ namespace DevForge_Connect.Controllers
             {
                 try
                 {
+                    userProfile.NlpTags = await _nlTranslator.GetNlpTags(userProfile.Expirience);
                     _context.Update(userProfile);
                     await _context.SaveChangesAsync();
                 }
