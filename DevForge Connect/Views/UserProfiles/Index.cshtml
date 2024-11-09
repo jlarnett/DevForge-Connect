@@ -1,4 +1,7 @@
-﻿@model DevForge_Connect.Entities.UserProfile
+﻿@using DevForge_Connect.Services.NLP_Translator
+@using Microsoft.IdentityModel.Tokens
+@model DevForge_Connect.Entities.UserProfile
+@inject ITranslator _nlTranslator
 
 @{
     ViewData["Title"] = "Profile";
@@ -14,8 +17,44 @@
             <p><strong>Bio:</strong> @Model.Bio</p>
             <p><strong>Expirience:</strong> @Model.Expirience</p>
             <p><strong>Email:</strong> @Model.User.Email</p>
+            @{
+                if (Model.NlpTags != null && !Model.NlpTags.IsNullOrEmpty())
+                {
+                    <div class="fw-bold row">
+                        <div class="row">
+                            @{
+                                // TODO - Make it so the badge color matches whether the current user has this skill
+                                <div class="col"></div>
+                                bool tagColor = false;
+                                var tags = _nlTranslator.DecatNlpTags(Model.NlpTags);
+                                int counter = 0;
+                                foreach (var tag in tags)
+                                {
+                                    if (counter < 3)
+                                    {
+                                        if (tagColor)
+                                        {
+                                            <span class="badge badge-pill bg-danger col-3 m-1">@tag</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-pill bg-success col-3 m-1">@tag</span>
+                                        }
+
+                                        tagColor = !tagColor;
+                                    }
+
+                                    counter++;
+                                }
+
+                                <div class="col"></div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
         </div>
     </div>
 
-    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit Profile</a>
+    <a class="btn btn-primary w-100" asp-action="Edit" asp-route-id="@Model.Id">Edit Profile</a>
 </div>
