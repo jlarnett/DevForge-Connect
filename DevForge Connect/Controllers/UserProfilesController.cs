@@ -50,7 +50,7 @@ namespace DevForge_Connect.Controllers
                 {
                     UserId = userId,
                     Bio = "",
-                    Expirience = "",
+					Expirience = "",
                     ProfilePicture = defaultPFP
                 };
 
@@ -195,7 +195,7 @@ namespace DevForge_Connect.Controllers
             {
                 try
                 {
-                    userProfile.NlpTags = await _nlTranslator.GetNlpTags(userProfile.Expirience);
+                    userProfile.NlpTags = await _nlTranslator.GetNlpTags([userProfile.Expirience]);
                     _context.Update(userProfile);
                     await _context.SaveChangesAsync();
                 }
