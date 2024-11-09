@@ -18,6 +18,7 @@ def spacy_prediction(text):
         "NETWORK": ["Lan", "LAN", "local area network", "network", "DNS","firewall", "port", "ports", 
                     "protocol", "protocols", "server farm", "IP", "WAN", "FIREWALL", "DHCP", "Server", "tcp", "tcp/ip"],
         "OPERATING_SYSTEMS": ["WINDOWS", "LINUX", "KALI", "Kali", "windows", "linux", "kernal", "cpu scheduler", "Paging", "Virtual Memory", "c"],
+        "REALTIME": ["Realtime", "Real-Time", "REAL-TIME", "EMBEDDED", "Embedded", "realtime", "c", "execution-speed", "quick response time"],
     }
 
     # Example usage after classification
