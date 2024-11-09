@@ -16,7 +16,7 @@ model = genai.GenerativeModel(
 chat = model.start_chat(
     history=[
         {"role": "user", "parts": "Hello, I'm going to be asking questions about projects and I need help flushing out the requirements. After each response between you and client can you PLEASE give a well formatted SHORT summary of the gather project details. I want the Title, Description, Requirements,deadline, and funding sections, Technologies Required to be included"},
-        {"role": "user", "parts": "I would like you to return a well formatted JSON object back to me with the gathered responses"},
+        {"role": "user", "parts": "I would like you to return a well formatted JSON object back to me with the gathered responses."},
         {"role": "model", "parts": "Great to meet you! Please give me some details about the vision of your project? What are some of the features you would like to see?"},
     ]
 )
