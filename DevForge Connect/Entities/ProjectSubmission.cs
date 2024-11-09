@@ -18,6 +18,6 @@ namespace DevForge_Connect.Entities
         public Status? Status { get; set; }
 
         public ICollection<ProjectBid> Bids { get; set; } = new List<ProjectBid>();
-		public string NlpTags { get; internal set; }
+		public string? NlpTags { get; internal set; }
 	}
 }

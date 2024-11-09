@@ -63,5 +63,38 @@ namespace DevForge_Connect.Services.NLP_Translator
             var tags = tagString.Split('|');
             return tags.ToList();
         }
+
+        public string GrabTop3Tags(string nlpClasses)
+        {
+			
+
+			// Deserialize the JSON string into a List of Lists
+			var technologyLists = JsonConvert.DeserializeObject<List<List<string>>>(nlpClasses);
+
+			// Flatten the list and count occurrences of each technology
+			var technologyCounts = technologyLists
+				.SelectMany(x => x) // Flatten into a single list of technologies
+				.GroupBy(x => x)    // Group by each technology name
+				.ToDictionary(g => g.Key, g => g.Count()); // Create a dictionary with counts
+
+			// Check if there are any technologies with more than one occurrence
+			var hasRepeats = technologyCounts.Values.Any(count => count > 1);
+
+			// If there are repeats, get the top 3 based on frequency, otherwise get unique technologies
+			string result;
+			if (hasRepeats)
+			{
+				result = technologyCounts
+					.OrderByDescending(kvp => kvp.Value) // Order by frequency
+					.Take(3)                             // Take the top 3
+					.Select(kvp => kvp.Key)              // Select only the technology name
+					.Aggregate((current, next) => $"{current}|{next}"); // Join with "|"
+			}
+			else
+			{
+				result = string.Join("|", technologyCounts.Keys); // Join all unique technologies with "|"
+			}
+			return result;
+		}
     }
 }

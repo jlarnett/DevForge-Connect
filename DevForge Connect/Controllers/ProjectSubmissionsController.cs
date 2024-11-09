@@ -91,7 +91,10 @@ namespace DevForge_Connect.Controllers
 
             //Get the NLP tags associated with project submission and assign to project
 
-            projectSubmission.NlpTags = await _translator.GetNlpTags(stringArrayDescription);
+            string nlpTags = await _translator.GetNlpTags(stringArrayDescription);
+            string top3NlpTags = _translator.GrabTop3Tags(nlpTags);
+
+			projectSubmission.NlpTags = top3NlpTags;
 
             if (ModelState.IsValid)
             {
@@ -141,8 +144,11 @@ namespace DevForge_Connect.Controllers
                 //Assign the current user to project submission
                 projectSubmission.creatorId = _userManager.GetUserId(User);
 
-                //Get the NLP tags associated with project submission and assign to project
-                projectSubmission.NlpTags = await _translator.GetNlpTags(projectSubmission.Description);
+				string[] stringArrayDescription = Regex.Split(projectSubmission.Description, @"(?<=[.!?])\s+");
+				string nlpTags = await _translator.GetNlpTags(stringArrayDescription);
+				string top3NlpTags = _translator.GrabTop3Tags(nlpTags);
+				//Get the NLP tags associated with project submission and assign to project
+				projectSubmission.NlpTags = top3NlpTags;
 
                 try
                 {
