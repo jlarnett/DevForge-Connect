@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Policy;
 using DevForge_Connect.Entities.Identity;
 
 namespace DevForge_Connect.Entities
@@ -21,6 +22,7 @@ namespace DevForge_Connect.Entities
         public Status? Status { get; set; }
 
         public int? ProjectId { get; set; }
+
         public ProjectSubmission? Project { get; set; } = null;
     }
 }

@@ -6896,7 +6896,7 @@ textarea.form-control-lg {
   text-decoration-color: RGBA(var(--bs-primary-rgb), var(--bs-link-underline-opacity, 1)) !important;
 }
 .link-primary:hover, .link-primary:focus {
-  color: RGBA(40, 74, 109, var(--bs-link-opacity, 1)) !important;
+  color: cornflowerblue !important;
   -webkit-text-decoration-color: RGBA(40, 74, 109, var(--bs-link-underline-opacity, 1)) !important;
   text-decoration-color: RGBA(40, 74, 109, var(--bs-link-underline-opacity, 1)) !important;
 }
