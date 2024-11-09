@@ -12,6 +12,7 @@ namespace DevForge_Connect.Entities
         public string? Bio { get; set; }
         public string? Expirience { get; set; }
         public byte[]? ProfilePicture { get; set; }
+        public string? NlpTags { get; set; } = string.Empty;
 
         //Navigation Properties
         public ApplicationUser? User { get; set; } = null!;
