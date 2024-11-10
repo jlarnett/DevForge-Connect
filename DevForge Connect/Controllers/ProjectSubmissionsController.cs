@@ -71,8 +71,22 @@ namespace DevForge_Connect.Controllers
         [Authorize]
         public IActionResult Create()
         {
+            var userTeams = _context.UserTeams.Where(ut => ut.UserId.Equals(_userManager.GetUserId(User))).Include(ut => ut.Team);
+
+            List<Team> teams = new List<Team>();
+
+            foreach (var ut in userTeams)
+            {
+                if(ut.Team != null)
+                    teams.Add(ut.Team);
+            }
+
             ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
+            var projectSubmission = new ProjectSubmission();
+            projectSubmission.TeamId = -1;
+            return View(projectSubmission);
         }
 
         // POST: ProjectSubmissions/Create
@@ -81,7 +95,7 @@ namespace DevForge_Connect.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId")] ProjectSubmission projectSubmission)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId,TeamId")] ProjectSubmission projectSubmission)
         {
             //Assign the current user to project submission
             projectSubmission.creatorId = _userManager.GetUserId(User);
@@ -95,6 +109,11 @@ namespace DevForge_Connect.Controllers
             string top3NlpTags = _translator.GrabTop3Tags(nlpTags);
 
 			projectSubmission.NlpTags = top3NlpTags;
+
+            if (projectSubmission.TeamId == -1)
+            {
+                projectSubmission.TeamId = null;
+            }
 
             if (ModelState.IsValid)
             {

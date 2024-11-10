@@ -24,5 +24,8 @@ namespace DevForge_Connect.Entities
         public int? ProjectId { get; set; }
 
         public ProjectSubmission? Project { get; set; } = null;
+
+        public int? TeamId { get; set; }
+        public Team? Team { get; set; }
     }
 }
