@@ -20,5 +20,8 @@ namespace DevForge_Connect.Entities
 
         public ICollection<ProjectBid> Bids { get; set; } = new List<ProjectBid>();
 		public string? NlpTags { get; internal set; }
+
+        public int? TeamId { get; set; }
+        public Team? Team { get; set; }
 	}
 }

@@ -1,9 +1,11 @@
 ﻿@using System.ComponentModel
 @using DevForge_Connect.Entities
 @using DevForge_Connect.Entities.Identity
+@using DevForge_Connect.Services.TeamBuilder
 @using Microsoft.AspNetCore.Identity
 @model DevForge_Connect.Models.TeamDetailsVm
 @inject UserManager<ApplicationUser> _userManager
+@inject ITeamBuilder _teamBuilder
 
 @{
     ViewData["Title"] = "Details";
@@ -27,13 +29,26 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var user in Model.Users) {
+            @foreach (var user in Model.UserTeams) {
                 <tr>
                     <td class="align-items-center">
-                        @user.Email
+                        @user.User.Email
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="" class="btn btn-danger">Remove Member</a> |
+                        @{
+
+                            if (_userManager.GetUserId(User) == @user.UserId)
+                            {
+                                <a asp-action="Delete" asp-controller="UserTeams" asp-route-id="@user.Id" class="btn btn-danger">Leave Team</a>
+                            }
+                            else
+                            {
+                                if (await _teamBuilder.IsTeamLeader(_userManager.GetUserId(User), Model.Id) || await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User),"Admin"))
+                                {
+                                    <a asp-action="Delete" asp-controller="UserTeams" asp-route-id="@user.Id" class="btn btn-danger">Remove Member</a>
+                                }
+                            }
+                        }
                     </td>
                 </tr>
             }
