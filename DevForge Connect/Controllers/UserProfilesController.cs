@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using DevForge_Connect.Entities.Identity;
 using DevForge_Connect.Services.NLP_Translator;
+using System.Text.Json;
 
 namespace DevForge_Connect.Controllers
 {
@@ -50,7 +51,7 @@ namespace DevForge_Connect.Controllers
                 {
                     UserId = userId,
                     Bio = "",
-                    Expirience = "",
+					Expirience = "",
                     ProfilePicture = defaultPFP
                 };
 
@@ -195,8 +196,16 @@ namespace DevForge_Connect.Controllers
             {
                 try
                 {
-                    userProfile.NlpTags = await _nlTranslator.GetNlpTags(userProfile.Expirience);
-                    _context.Update(userProfile);
+                    string userNlpTags = await _nlTranslator.GetNlpTags([userProfile.Expirience]);
+					var outerArray = JsonSerializer.Deserialize<string[][]>(userNlpTags);
+                    var innerArray = outerArray[0];
+                    string tag = "";
+                    foreach (var item in innerArray)
+                    {
+                        tag = tag + "|" + item;
+                    }
+                    userProfile.NlpTags = tag;
+					_context.Update(userProfile);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
