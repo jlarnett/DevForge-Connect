@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using DevForge_Connect.Entities.Identity;
 using DevForge_Connect.Services.NLP_Translator;
+using DevForge_Connect.Services.TeamBuilder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 using SignalRChat.Hubs;
@@ -86,6 +87,7 @@ namespace DevForge_Connect
             });
 
             services.AddTransient<IEmailSender, SendGridEmailSender>();
+            services.AddTransient<ITeamBuilder, TeamBuilder>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

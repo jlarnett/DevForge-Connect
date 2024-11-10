@@ -33,7 +33,16 @@
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
             </div>
+
             <!--@Html.HiddenFor(p => p.UserId)--> <!-- I want this but when I put it in, the form's create button does nothing-->
+
+            <div class="form-group">
+                <label asp-for="TeamId" class="control-label"></label>
+                <select asp-for="TeamId" class="form-control" asp-items="ViewBag.TeamId" aria-label="Select your country">
+                    <option value="-1">Select Team</option>
+                </select>
+            </div>
+
             @Html.HiddenFor(p => p.StatusId)
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
