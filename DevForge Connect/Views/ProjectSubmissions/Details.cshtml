@@ -1,7 +1,16 @@
 ﻿@using DevForge_Connect.Services.NLP_Translator
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Identity
+@using DevForge_Connect.Entities.Identity
 @model DevForge_Connect.Entities.ProjectSubmission
 @inject ITranslator _nlTranslator
+@inject UserManager<ApplicationUser> _userManager;
+
+@{
+    var currentUser = await _userManager.GetUserAsync(User);
+    var hasAcceptedBin = 0;
+}
+
 @{
     ViewData["Title"] = "Details";
 }
@@ -80,51 +89,102 @@
 
 <table class="table table-striped" id="BidTable">
     <thead>
-    <tr>
-        <th>
-            User
-        </th>
-        <th>
-            Offer Amount
-        </th>
-        <th>
-            Finish By Date
-        </th>
-        <th>
-            Status
-        </th>
-        <th></th>
-    </tr>
+        <tr>
+            <th>
+                User
+            </th>
+            <th>
+                Offer Amount
+            </th>
+            <th>
+                Finish By Date
+            </th>
+            <th>
+                Status
+            </th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model.Bids) {
+        
+
+        @foreach (var item in Model.Bids)
+        {
+            @if (item.StatusId == 3)
+            {
+                hasAcceptedBin = 1;
+            }
         <tr>
             <td class="align-items-center">
-                @Html.DisplayFor(modelItem => item.User.Email)
+                    @Html.DisplayFor(modelItem => item.User.Email)
             </td>
             <td>
-                $@Html.DisplayFor(modelItem => item.OfferAmount)
+                    @Html.DisplayFor(modelItem => item.OfferAmount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FinishDate)
+                    @Html.DisplayFor(modelItem => item.FinishDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status.Description)
+                    @Html.DisplayFor(modelItem => item.Status.Description)
             </td>
-            <td>
-                <a asp-controller="ProjectBids" asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">More Details</a> |
-                <a asp-controller="ProjectBids"  asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Accept</a> |
-                <a asp-controller="ProjectBids" asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger">Decline</a> |
-            </td>
+                @if (_userManager.GetUserId(User).Equals(Model.creatorId) && item.StatusId != 3)
+                {
+                    <td>
+                        <a asp-controller="ProjectBids" asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">More Details</a> |
+                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#BidAccepttModal" data-id="@item.Id">Accept</a> |
+                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#BidDeclineModal" data-id="@item.Id">Decline</a> |
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
         </tr>
-    }
+        }
+
+        <!-- Accept Bid Modal -->
+        <div class="modal fade" id="BidAccepttModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="BidAccepttModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Accept Bid</h5>
+                    </div>
+                    <div class="modal-body">Are you sure you want to accept this bid?</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- This link will be dynamically updated with the correct ID -->
+                        <a id="acceptBidLink" asp-controller="ProjectBids" asp-action="Accept" class="btn btn-primary">Accept</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decline Bid Modal -->
+        <div class="modal fade" id="BidDeclineModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="BidDeclineModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Decline Bid</h5>
+                    </div>
+                    <div class="modal-body">Are you sure you want to decline this bid? This will remove it forever.</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- This link will be dynamically updated with the correct ID -->
+                        <a id="declineBidLink" asp-controller="ProjectBids" asp-action="DeclineBid" class="btn btn-danger">Decline Bid</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        }
+
     </tbody>
 </table>
 
 <div class="row">
-    @if (User.IsInRole("developer") || User.IsInRole("admin"))
+    @if ((User.IsInRole("developer") || User.IsInRole("admin")) && (hasAcceptedBin != 1) && !(_userManager.GetUserId(User).Equals(Model.creatorId)))
     {
-        <a class="btn btn-outline-success col" asp-action="Create" asp-controller="ProjectBids">Submit Bid</a>
+           <a class="btn btn-outline-success col" asp-action="Create" asp-route-id=@Model.Id asp-controller="ProjectBids">Submit Bid</a>
     }
 </div>
 
@@ -136,4 +196,20 @@
 @section Scripts
 {
     <script type="text/javascript" src="~/js/Table_Initializers/BidTable.js"></script>
+        <script>
+        // JavaScript to handle the dynamic update of the links
+        $('#BidAccepttModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var bidId = button.data('id'); // Extract the bid ID from the data-id attribute
+            var modal = $(this);
+            modal.find('#acceptBidLink').attr('href', '/ProjectBids/Accept/' + bidId); // Update the link's href dynamically
+        });
+
+        $('#BidDeclineModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var bidId = button.data('id'); // Extract the bid ID from the data-id attribute
+            var modal = $(this);
+            modal.find('#declineBidLink').attr('href', '/ProjectBids/DeclineBid/' + bidId); // Update the link's href dynamically
+        });
+    </script>
 }

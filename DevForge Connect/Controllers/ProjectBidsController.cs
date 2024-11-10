@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
+using DevForge_Connect.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace DevForge_Connect.Controllers
 {
     public class ProjectBidsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public ProjectBidsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ProjectBidsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ProjectBids
@@ -44,7 +47,35 @@ namespace DevForge_Connect.Controllers
                 return NotFound();
             }
 
+            projectBid.StatusId = 2;
+            await _context.SaveChangesAsync();
             return View(projectBid);
+        }
+
+        public async Task<IActionResult> Accept(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var projectBid = await _context.ProjectBids
+                .Include(p => p.Project)
+                .Include(p => p.User)
+                .Include(p => p.Status)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (projectBid == null)
+            {
+                return NotFound();
+            }
+            foreach (var otherBid in _context.ProjectBids)
+            {
+                if (otherBid.ProjectId == projectBid.ProjectId && otherBid.Id != projectBid.Id)
+                _context.ProjectBids.Remove(otherBid);
+            }
+            projectBid.StatusId = 3;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "ProjectSubmissions", new { id = projectBid.ProjectId });
         }
 
         // GET: ProjectBids/Create
@@ -60,14 +91,16 @@ namespace DevForge_Connect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OfferAmount,FinishDate,UserId,ProposalDescription,StatusId,ProjectId")] ProjectBid projectBid)
+        public async Task<IActionResult> Create([Bind("OfferAmount,FinishDate,UserId,ProposalDescription,StatusId,ProjectId")] ProjectBid projectBid, int? id)
         {
             if (ModelState.IsValid)
             {
+                projectBid.UserId = _userManager.GetUserId(User);
                 projectBid.StatusId = (await _context.Statuses.FirstOrDefaultAsync())!.Id;
+                projectBid.ProjectId = id;
                 _context.Add(projectBid);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "ProjectSubmissions", new { id = id });
             }
             ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id", projectBid.ProjectId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectBid.UserId);
@@ -147,6 +180,24 @@ namespace DevForge_Connect.Controllers
             }
 
             return View(projectBid);
+        }
+
+        public async Task<IActionResult> DeclineBid(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            int? projectBidID = 0;
+            var projectBid = await _context.ProjectBids.FindAsync(id);
+            if (projectBid != null)
+            {
+                projectBidID = projectBid.ProjectId;
+                _context.ProjectBids.Remove(projectBid);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "ProjectSubmissions", new { id = projectBidID });
         }
 
         // POST: ProjectBids/Delete/5
