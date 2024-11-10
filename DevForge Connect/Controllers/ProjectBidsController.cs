@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DevForge_Connect.Data;
 using DevForge_Connect.Entities;
+using DevForge_Connect.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace DevForge_Connect.Controllers
 {
     public class ProjectBidsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProjectBidsController(ApplicationDbContext context)
+        public ProjectBidsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ProjectBids
@@ -50,6 +54,18 @@ namespace DevForge_Connect.Controllers
         // GET: ProjectBids/Create
         public IActionResult Create()
         {
+            var userTeams = _context.UserTeams.Where(ut => ut.UserId.Equals(_userManager.GetUserId(User))).Include(ut => ut.Team);
+
+            List<Team> teams = new List<Team>();
+
+            foreach (var ut in userTeams)
+            {
+                if(ut.Team != null)
+                    teams.Add(ut.Team);
+            }
+
+
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
             ViewData["ProjectId"] = new SelectList(_context.ProjectSubmissions, "Id", "Id");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
@@ -60,8 +76,12 @@ namespace DevForge_Connect.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OfferAmount,FinishDate,UserId,ProposalDescription,StatusId,ProjectId")] ProjectBid projectBid)
+        public async Task<IActionResult> Create([Bind("Id,OfferAmount,FinishDate,UserId,ProposalDescription,StatusId,ProjectId,TeamId")] ProjectBid projectBid)
         {
+            if (projectBid.TeamId == -1)
+            {
+                projectBid.TeamId = null;
+            }
             if (ModelState.IsValid)
             {
                 projectBid.StatusId = (await _context.Statuses.FirstOrDefaultAsync())!.Id;
