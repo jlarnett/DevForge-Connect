@@ -159,7 +159,7 @@ namespace DevForge_Connect.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Teams");
         }
 
         private bool UserTeamExists(int id)
