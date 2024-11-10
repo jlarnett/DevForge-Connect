@@ -48,11 +48,46 @@ function SendMessageGemini(message) {
             element.innerHTML = encodedMsg;
             document.getElementById("messages").appendChild(element);
 
-            var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + data + "</p></div>";
+            const summarizedProjectJson2 = data.split("```");
+
+            if (summarizedProjectJson2.length > 1) {
+                let summarizedProjectJson = summarizedProjectJson2[1].slice(4);
+                let projectDetails = JSON.parse(summarizedProjectJson);
+
+                console.log(projectDetails);
+                document.getElementById("Title").value = projectDetails.Title;
+                document.getElementById("Description").value = projectDetails.Description;
+                document.getElementById("Funding").value = projectDetails.Funding;
+
+                //Append each requirement to description!
+                document.getElementById("Description").value += "\n\n"; 
+                document.getElementById("Description").value += "Requirements";
+                projectDetails.Requirements.forEach(function (item, index) {
+                    document.getElementById("Description").value += "\n"; 
+                    document.getElementById("Description").value += item;
+                });
+
+                //Append each tech stack to description!
+                document.getElementById("Description").value += "\n\n"; 
+                document.getElementById("Description").value += "Technologies Required";
+                projectDetails['Technologies Required'].forEach(function (item, index) {
+                    document.getElementById("Description").value += "\n"; 
+                    document.getElementById("Description").value += item;
+                });
+
+                var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + summarizedProjectJson2[2] + "</p></div>";
+            }
+            else {
+                var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + data + "</p></div>";
+            }
+
             var experimentalElement = element.cloneNode(true);
             experimentalElement.innerHTML = encodedMsg;
             experimentalElement.classList.add("row");
-            document.getElementById("experimentalChat").appendChild(experimentalElement);
+
+            if (data.length > 0) {
+                document.getElementById("experimentalChat").appendChild(experimentalElement);
+            }
         })
         .catch(error => {
             var today = new Date();
