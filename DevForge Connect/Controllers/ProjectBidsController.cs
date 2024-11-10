@@ -105,7 +105,7 @@ namespace DevForge_Connect.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Create([Bind("Id,OfferAmount,FinishDate,UserId,ProposalDescription,StatusId,ProjectId,TeamId")] ProjectBid projectBid, int? id)
+        public async Task<IActionResult> Create([Bind("OfferAmount,FinishDate,UserId,ProposalDescription,StatusId,ProjectId,TeamId")] ProjectBid projectBid, int? id)
 
         {
             if (projectBid.TeamId == -1)
