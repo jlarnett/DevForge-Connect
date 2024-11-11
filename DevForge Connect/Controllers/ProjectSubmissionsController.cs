@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.CodeAnalysis;
 
 namespace DevForge_Connect.Controllers
 {
@@ -199,7 +200,7 @@ namespace DevForge_Connect.Controllers
             {
                 return NotFound();
             }
-
+            
             var projectSubmission = await _context.ProjectSubmissions
                 .Include(p => p.Creator)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -218,6 +219,11 @@ namespace DevForge_Connect.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var projectSubmission = await _context.ProjectSubmissions.FindAsync(id);
+            foreach (var conectedBid in _context.ProjectBids)
+            {
+                if (conectedBid.ProjectId == id)
+                    _context.ProjectBids.Remove(conectedBid);
+            }
             if (projectSubmission != null)
             {
                 _context.ProjectSubmissions.Remove(projectSubmission);
