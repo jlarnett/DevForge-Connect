@@ -62,18 +62,30 @@ function SendMessageGemini(message) {
                 //Append each requirement to description!
                 document.getElementById("Description").value += "\n\n"; 
                 document.getElementById("Description").value += "Requirements";
-                projectDetails.Requirements.forEach(function (item, index) {
-                    document.getElementById("Description").value += "\n"; 
-                    document.getElementById("Description").value += item;
-                });
+
+                if (projectDetails.Requirements.length > 0) {
+                    projectDetails.Requirements.forEach(function (item, index) {
+                        document.getElementById("Description").value += "\n"; 
+                        document.getElementById("Description").value += item;
+                    });
+                }
+
 
                 //Append each tech stack to description!
                 document.getElementById("Description").value += "\n\n"; 
                 document.getElementById("Description").value += "Technologies Required";
-                projectDetails['Technologies Required'].forEach(function (item, index) {
-                    document.getElementById("Description").value += "\n"; 
-                    document.getElementById("Description").value += item;
-                });
+
+                if (projectDetails['Technologies Required'].length > 0 && Array.isArray(projectDetails['Technologies Required'])) {
+                    projectDetails['Technologies Required'].forEach(function (item, index) {
+                        document.getElementById("Description").value += "\n";
+                        document.getElementById("Description").value += item;
+                    });
+                }
+                else {
+                    document.getElementById("Description").value += "\n";
+                    document.getElementById("Description").value += projectDetails['Technologies Required'];
+                }
+
 
                 var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + summarizedProjectJson2[2] + "</p></div>";
             }
