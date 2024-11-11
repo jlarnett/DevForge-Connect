@@ -64,10 +64,11 @@ namespace DevForge_Connect.Controllers
 
         // GET: ProjectSubmissions/Create
         [Authorize]
-        public IActionResult Create()
+        public IActionResult Create(int step = 1)
         {
+            ViewData["Step"] = step;
             ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            return View(new ProjectSubmission());
         }
 
         // POST: ProjectSubmissions/Create
@@ -76,21 +77,27 @@ namespace DevForge_Connect.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId")] ProjectSubmission projectSubmission)
+        public async Task<IActionResult> Create(ProjectSubmission projectSubmission, int step = 1)
         {
-            //Assign the current user to project submission
-            projectSubmission.creatorId = _userManager.GetUserId(User);
-
-            //Get the NLP tags associated with project submission and assign to project
-            projectSubmission.NlpTags = await _translator.GetNlpTags(projectSubmission.Description);
-
             if (ModelState.IsValid)
             {
-                projectSubmission.StatusId = (await _context.Statuses.FirstOrDefaultAsync())!.Id;
+                if (step < 4)
+                {
+                    step++;
+                    ViewData["Step"] = step;
+                    return View(projectSubmission);
+                }
+
+                projectSubmission.creatorId = _userManager.GetUserId(User);
+                projectSubmission.NlpTags = await _translator.GetNlpTags(projectSubmission.Description);
+                projectSubmission.StatusId = (await _context.Statuses.FirstOrDefaultAsync())?.Id;
+
                 _context.Add(projectSubmission);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["Step"] = step;
             ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id", projectSubmission.creatorId);
             return View(projectSubmission);
         }

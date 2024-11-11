@@ -1,22 +1,21 @@
-﻿
-@model DevForge_Connect.Entities.ProjectSubmission
+﻿@model DevForge_Connect.Entities.ProjectSubmission
 
 @{
     ViewData["Title"] = "Create";
-    
 }
-<style>    
+
+<style>
     .open-button {
-        background-color: #555;
+        background-color: #4a76a8;
         color: white;
-        padding: 16px 20px;
+        padding: 14px 20px;
         border: none;
         cursor: pointer;
-        opacity: 0.8;
+        border-radius: 8px;
         position: fixed;
-        bottom: 23px;
-        right: 28px;
-        width: 280px;
+        bottom: 25px;
+        right: 25px;
+        width: 250px;
     }
 
     .chat-popup {
@@ -24,88 +23,134 @@
         position: fixed;
         bottom: 0;
         right: 15px;
-        border: 3px solid black;
+        border: 2px solid #4a76a8;
+        border-radius: 8px;
         z-index: 9;
+        background-color: #f7f9fb;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .form-container {
         max-width: 400px;
-        padding: 10px;
-        background-color: lightgrey;
+        padding: 20px;
+        background-color: #f0f4f8;
+        border-radius: 8px;
+    }
+
+    .chat-container {
+        background-color: #343a40;
+        color: #f1f1f1;
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    .btn-dark {
+        background-color: #4a76a8;
+        border-color: #4a76a8;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .control-label {
+        margin-top: 10px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .col-md-6 {
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .col-6:first-child {
+        margin-right: 20px;
+    }
+
 </style>
 
-
-<h4 class="text-center">Submit Project Idea</h4>
+<h4 class="text-center">Submit Your Project Idea</h4>
 <hr />
-<div class="row p-4 ">
-    <div class="col-6 border border-primary p-2 rounded-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control"/>
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" style="height: 400px;"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Deadline" class="control-label"></label>
-                <input asp-for="Deadline" class="form-control"/>
-                <span asp-validation-for="Deadline" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Funding" class="control-label"></label>
-                <input asp-for="Funding" class="form-control"/>
-                <span asp-validation-for="Funding" class="text-danger"></span>
-            </div>
-            @Html.HiddenFor(p => p.creatorId)
-            <div class="form-group row p-2">
-                <input type="submit" value="Create" class="btn btn-primary"/>
+<div class="row p-4">
+    <div class="col-md-6 border border-primary p-4 rounded-4">
+        <form asp-action="Create" method="post">
+            @if ((int)ViewData["Step"] == 1)
+            {
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label">Project Title</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            }
+            else if ((int)ViewData["Step"] == 2)
+            {
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Project Description</label>
+                    <textarea asp-for="Description" class="form-control" style="height: 200px;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            }
+            else if ((int)ViewData["Step"] == 3)
+            {
+                <div class="form-group">
+                    <label asp-for="Deadline" class="control-label">Deadline</label>
+                    <input asp-for="Deadline" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" />
+                    <span asp-validation-for="Deadline" class="text-danger"></span>
+                </div>
+            }
+            else if ((int)ViewData["Step"] == 4)
+            {
+                <div class="form-group">
+                    <label asp-for="Funding" class="control-label">Funding</label>
+                    <input asp-for="Funding" type="number" class="form-control" />
+                    <span asp-validation-for="Funding" class="text-danger"></span>
+                </div>
+            }
+
+            <input type="hidden" name="step" value="@ViewData["Step"]" />
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Next" class="btn btn-primary w-100" />
             </div>
         </form>
     </div>
-    <div class="col-6 border border-1 rounded-3 bg-dark">
+    <div class="col-md-6 chat-container p-4 rounded-4">
         <div class="container-fluid">
-            <div class="row d-flex overflow-auto overflow-y-scroll" id="experimentalChat" style="height: 600px;">
+            <div class="row d-flex overflow-auto" id="experimentalChat" style="height: 400px;">
             </div>
-            <div class="row">
+            <div class="row mt-2">
                 <div class="form-group col-9 p-0">
-                    <textarea class="form-control bg-dark text-light" type="text" style="height: 20px;" id="ExperimentalInput"></textarea>
-                    <span class="text-danger"></span>
+                    <textarea class="form-control bg-dark text-light" id="ExperimentalInput" placeholder="Type your message here..."></textarea>
                 </div>
-                <btn class="btn btn-dark col-3" id="ExperimentalSendChat">
+                <button class="btn btn-dark col-3" id="ExperimentalSendChat">
                     Talk to Gemini
-                </btn>
+                </button>
             </div>
         </div>
 
         <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
         <div class="chat-popup form-container" id="myForm">
             <h1>Chat Bot</h1>
-            <div class="overflow-auto" style="max-height: 400px;">
-                <div id="messages" style="overflow-anchor:none"></div>
-
-                <hr/>
-
-                <div class="input-group mb-3">
-                    <input type="text" id="messageInput" class="form-control" placeholder="Send message"/>
-
-                    <div class="input-group-append">
-                        <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
-                        <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
-                    </div>
-                </div>
+            <div class="overflow-auto" style="max-height: 300px;">
+                <div id="messages"></div>
+            </div>
+            <hr />
+            <div class="input-group mb-3">
+                <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
+                <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
+                <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
             </div>
         </div>
     </div>
 </div>
 <hr />
-
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
 
 <script>
@@ -119,8 +164,11 @@
         document.getElementById("openBtn").style.display = "block";
     }
 </script>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/chat.js"></script>
     <script type="text/javascript" src="~/js/LLM_API/api.js"></script>
