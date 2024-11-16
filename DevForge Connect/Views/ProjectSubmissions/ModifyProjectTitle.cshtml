@@ -33,12 +33,11 @@
         background-color: lightgrey;
 </style>
 
-
-<h4 class="text-center">Submit Project Idea</h4>
 <hr />
 <form asp-action="ModifyProjectDescription">
     <div class="row p-4">
-    
+        <h2 class="text-center">What would you like to call the project?</h2>
+
         <div class="col-3"></div>
         @Html.HiddenFor(p => p.Description)
         @Html.HiddenFor(p => p.Deadline)

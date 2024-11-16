@@ -34,11 +34,11 @@
 </style>
 
 
-<h4 class="text-center">Submit Project Idea</h4>
 <hr />
 <form asp-action="Create">
     <div class="row p-4">
-    
+        <h2 class="text-center">Which team would you like to assign to the project?</h2>
+
         <div class="col-3"></div>
         @Html.HiddenFor(p => p.Title)
         @Html.HiddenFor(p => p.Description)
