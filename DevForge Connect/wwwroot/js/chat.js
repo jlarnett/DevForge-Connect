@@ -20,7 +20,7 @@ connection.on("ReceiveMessage", function (user, message) {
 
     //Experimental ChatBot Window Located next to Project Submission Form
     //Just seperating out the different UIs so they don't mess with each other
-    var encodedMsg = "<div class='rounded-4 m-1 p-1 text-end'><p><strong>    " + user + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p class='text-light'>    " + msg + "</p></div>";
+    var encodedMsg = "<div class='rounded-4 m-1 p-1 text-end'><p><strong class='text-light'>    " + user + "</strong> <span class='messageTime text-light'>" + time + "</span><hr></p><p class='text-light'>    " + msg + "</p></div>";
     var experimentalElement = element.cloneNode(true);
     experimentalElement.classList.add("row");
     experimentalElement.innerHTML = encodedMsg;
@@ -41,7 +41,7 @@ connection.start().then(function () {
 
     //Experimental ChatBot Window Located next to Project Submission Form
     //Just seperating out the different UIs so they don't mess with each other
-    var encodedMsg = "<div class='rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p class='text-light'>    " + "Hello! Please feel free to use this Gemeni chat bot to flush out your project requirements." + "</p></div>";
+    var encodedMsg = "<div class='rounded-4 m-1 p-1'><p><strong class='text-light'>" + "    Chat Bot" + "</strong> <span class='messageTime text-light'>" + time + "</span><hr></p><p class='text-light'>    " + "Hello! Please feel free to use this Gemeni chat bot to flush out your project requirements." + "</p></div>";
     var experimentalElement = element.cloneNode(true);
     experimentalElement.classList.add("row");
     experimentalElement.innerHTML = encodedMsg;

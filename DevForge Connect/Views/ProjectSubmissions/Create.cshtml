@@ -33,13 +33,18 @@
         background-color: lightgrey;
 </style>
 
+<div class="container-fluid bg-secondary">
+    <h2 class="text-center">Generate Project Information</h2>
 
-<h4 class="text-center">Submit Project Idea</h4>
-<hr />
-<form asp-action="ModifyProjectTitle">
-    <div class="row p-4">
+    <hr />
     
-        <div class="col-3"></div>
+    <form asp-action="ModifyProjectTitle" class="bg-secondary">
+    <div class="row p-1 bg-secondary">
+
+        <div class="col-3 bg-primary rounded-3 me-2 border border-black border-2 p-4 shadow">
+            <p class="text-light border-bottom mb-5">- The chatbot can be used to flesh out project details and get more information about unknown tech stacks</p>
+            <p class="text-light border-bottom">- Try to enter as much information as possible before moving on. This will save you time later on.</p>
+        </div>
         @Html.HiddenFor(p => p.Title)
         @Html.HiddenFor(p => p.Description)
         @Html.HiddenFor(p => p.Deadline)
@@ -91,6 +96,10 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+</div>
+
+
+
 
 <script>
     function openForm() {
