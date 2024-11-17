@@ -9,6 +9,7 @@ using DevForge_Connect.Services.TeamBuilder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 using SignalRChat.Hubs;
+using dotenv.net;
 
 namespace DevForge_Connect
 {
@@ -77,11 +78,13 @@ namespace DevForge_Connect
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
-
+            // Load environment variables from the .env file
+            DotEnv.Load();
+            var sendGridApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             services.Configure<SendGridEmailSenderOptions>(options =>
             {
                 // Gets sendgrid secrets from azure key config / azure key vault. 
-                options.ApiKey = Configuration["SendGrid:ApiKey"]!;
+                options.ApiKey = sendGridApiKey!;
                 options.SenderEmail = Configuration["SendGrid:SenderEmail"]!;
                 options.SenderName = "DevForge_Connect";
             });
