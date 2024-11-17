@@ -63,34 +63,40 @@ function SendMessageGemini(message) {
                 document.getElementById("Description").value += "\n\n"; 
                 document.getElementById("Description").value += "Requirements";
 
-                if (projectDetails.Requirements.length > 0) {
-                    projectDetails.Requirements.forEach(function (item, index) {
-                        document.getElementById("Description").value += "\n"; 
-                        document.getElementById("Description").value += item;
-                    });
-                }
+                document.getElementById("Description").value += "\n"; 
+                document.getElementById("Description").value += projectDetails.Requirements;
+
+                //if (projectDetails.Requirements.length > 0) {
+                //    projectDetails.Requirements.forEach(function (item, index) {
+                //        document.getElementById("Description").value += "\n"; 
+                //        document.getElementById("Description").value += item;
+                //    });
+                //}
 
 
                 //Append each tech stack to description!
                 document.getElementById("Description").value += "\n\n"; 
                 document.getElementById("Description").value += "Technologies Required";
 
-                if (projectDetails['Technologies Required'].length > 0 && Array.isArray(projectDetails['Technologies Required'])) {
-                    projectDetails['Technologies Required'].forEach(function (item, index) {
-                        document.getElementById("Description").value += "\n";
-                        document.getElementById("Description").value += item;
-                    });
-                }
-                else {
-                    document.getElementById("Description").value += "\n";
-                    document.getElementById("Description").value += projectDetails['Technologies Required'];
-                }
+                document.getElementById("Description").value += "\n";
+                document.getElementById("Description").value += projectDetails.TechnologiesRequired;
+
+                //if (projectDetails['Technologies Required'].length > 0 && Array.isArray(projectDetails['Technologies Required'])) {
+                //    projectDetails['Technologies Required'].forEach(function (item, index) {
+                //        document.getElementById("Description").value += "\n";
+                //        document.getElementById("Description").value += item;
+                //    });
+                //}
+                //else {
+                //    document.getElementById("Description").value += "\n";
+                //    document.getElementById("Description").value += projectDetails['Technologies Required'];
+                //}
 
 
-                var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + summarizedProjectJson2[2] + "</p></div>";
+                var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong class='text-light'>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + summarizedProjectJson2[2] + "</p></div>";
             }
             else {
-                var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + data + "</p></div>";
+                var encodedMsg = "<div class=' rounded-4 m-1 p-1'><p><strong class='text-light'>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p style='white-space: pre-line' class='text-light'>    " + data + "</p></div>";
             }
 
             var experimentalElement = element.cloneNode(true);

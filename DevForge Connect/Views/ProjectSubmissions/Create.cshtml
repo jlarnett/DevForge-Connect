@@ -33,48 +33,27 @@
         background-color: lightgrey;
 </style>
 
+<div class="container-fluid bg-secondary">
+    <h2 class="text-center">Generate Project Information</h2>
 
-<h4 class="text-center">Submit Project Idea</h4>
-<hr />
-<div class="row p-4">
+    <hr />
+    
+    <form asp-action="ModifyProjectTitle" class="bg-secondary">
+    <div class="row p-1 bg-secondary">
 
-</div>
-<form asp-action="Create">
-    <div class="row p-4">
-        <div class="col-6 border border-primary p-2 rounded-4">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control"/>
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" style="height: 400px;"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Deadline" class="control-label"></label>
-                <input asp-for="Deadline" class="form-control"/>
-                <span asp-validation-for="Deadline" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Funding" class="control-label"></label>
-                <input asp-for="Funding" class="form-control"/>
-                <span asp-validation-for="Funding" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TeamId" class="control-label"></label>
-                <select asp-for="TeamId" class="form-control" asp-items="ViewBag.TeamId" aria-label="Select your country">
-                    <option value="-1">Select Team</option>
-                </select>
-            </div>
-            @Html.HiddenFor(p => p.creatorId)
-
+        <div class="col-3 bg-primary rounded-3 me-2 border border-black border-2 p-4 shadow">
+            <p class="text-light border-bottom mb-5">- The chatbot can be used to flesh out project details and get more information about unknown tech stacks</p>
+            <p class="text-light border-bottom">- Try to enter as much information as possible before moving on. This will save you time later on.</p>
         </div>
-        <div class="col-6 border border-1 rounded-3 bg-dark">
+        @Html.HiddenFor(p => p.Title)
+        @Html.HiddenFor(p => p.Description)
+        @Html.HiddenFor(p => p.Deadline)
+        @Html.HiddenFor(p => p.Funding)
+        @Html.HiddenFor(p => p.TeamId)
+        @Html.HiddenFor(p => p.creatorId)
+        <div class="col-6 border border-black border-2 rounded-3 bg-dark shadow p-2">
             <div class="container-fluid">
-                <div class="row d-flex overflow-auto overflow-y-scroll" id="experimentalChat" style="height: 550px;">
+                <div class="row d-flex overflow-auto overflow-y-scroll" id="experimentalChat" style="height: 700px;">
                 </div>
                 <div class="row">
                     <div class="form-group col-9 p-0">
@@ -106,9 +85,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-2"></div>
     </div>
-    <div class="form-group row p-4">
+    <div class="form-group row p-3">
         <input type="submit" value="Submit Project Idea" class="col btn btn-outline-primary fw-bolder"/>
     </div>
 </form>
@@ -117,6 +96,10 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+</div>
+
+
+
 
 <script>
     function openForm() {

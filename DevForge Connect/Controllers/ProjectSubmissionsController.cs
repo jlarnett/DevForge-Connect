@@ -90,6 +90,111 @@ namespace DevForge_Connect.Controllers
             return View(projectSubmission);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult ModifyProjectTitle([Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId,TeamId")] ProjectSubmission projectSubmission)
+        {
+            var userTeams = _context.UserTeams.Where(ut => ut.UserId.Equals(_userManager.GetUserId(User))).Include(ut => ut.Team);
+
+            List<Team> teams = new List<Team>();
+
+            foreach (var ut in userTeams)
+            {
+                if(ut.Team != null)
+                    teams.Add(ut.Team);
+            }
+
+            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
+            return View(projectSubmission);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult ModifyProjectDeadline([Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId,TeamId")] ProjectSubmission projectSubmission)
+        {
+            var userTeams = _context.UserTeams.Where(ut => ut.UserId.Equals(_userManager.GetUserId(User))).Include(ut => ut.Team);
+
+            List<Team> teams = new List<Team>();
+
+            foreach (var ut in userTeams)
+            {
+                if(ut.Team != null)
+                    teams.Add(ut.Team);
+            }
+
+            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
+            return View(projectSubmission);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult ModifyProjectDescription([Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId,TeamId")] ProjectSubmission projectSubmission)
+        {
+            var userTeams = _context.UserTeams.Where(ut => ut.UserId.Equals(_userManager.GetUserId(User))).Include(ut => ut.Team);
+
+            List<Team> teams = new List<Team>();
+
+            foreach (var ut in userTeams)
+            {
+                if(ut.Team != null)
+                    teams.Add(ut.Team);
+            }
+
+            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
+            return View(projectSubmission);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult ModifyProjectFunding([Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId,TeamId")] ProjectSubmission projectSubmission)
+        {
+            var userTeams = _context.UserTeams.Where(ut => ut.UserId.Equals(_userManager.GetUserId(User))).Include(ut => ut.Team);
+
+            List<Team> teams = new List<Team>();
+
+            foreach (var ut in userTeams)
+            {
+                if(ut.Team != null)
+                    teams.Add(ut.Team);
+            }
+
+            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
+            return View(projectSubmission);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult ModifyProjectTeam([Bind("Id,Title,Description,Deadline,Funding, AIGeneratedSummary, NlpTags, creatorId,StatusId,TeamId")] ProjectSubmission projectSubmission)
+        {
+            var userTeams = _context.UserTeams.Where(ut => ut.UserId.Equals(_userManager.GetUserId(User))).Include(ut => ut.Team);
+
+            List<Team> teams = new List<Team>();
+
+            foreach (var ut in userTeams)
+            {
+                if(ut.Team != null)
+                    teams.Add(ut.Team);
+            }
+
+            ViewData["creatorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
+            return View(projectSubmission);
+        }
+
         // POST: ProjectSubmissions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.

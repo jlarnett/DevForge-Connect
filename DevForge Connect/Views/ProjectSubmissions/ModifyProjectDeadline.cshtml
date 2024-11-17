@@ -1,0 +1,83 @@
+﻿
+@model DevForge_Connect.Entities.ProjectSubmission
+
+@{
+    ViewData["Title"] = "Modify Title";
+}
+<style>    
+    .open-button {
+        background-color: #555;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        opacity: 0.8;
+        position: fixed;
+        bottom: 23px;
+        right: 28px;
+        width: 280px;
+    }
+
+    .chat-popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 15px;
+        border: 3px solid black;
+        z-index: 9;
+    }
+
+    .form-container {
+        max-width: 400px;
+        padding: 10px;
+        background-color: lightgrey;
+</style>
+
+
+<hr />
+<form asp-action="ModifyProjectFunding">
+    <div class="row p-4">
+        <h2 class="text-center">When should the project be completed by?</h2>
+        <div class="col-3"></div>
+        @Html.HiddenFor(p => p.Title)
+        @Html.HiddenFor(p => p.Description)
+        @Html.HiddenFor(p => p.Funding)
+        @Html.HiddenFor(p => p.TeamId)
+        @Html.HiddenFor(p => p.creatorId)
+
+        <div class="col-6 border border-black border-2 rounded-3 shadow p-2">
+            <div class="form-group">
+                <label asp-for="Deadline" class="control-label"></label>
+                <input asp-for="Deadline" class="form-control" ></input>
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+    <div class="form-group row p-3">
+        <input type="submit" value="Next Step" class="col btn btn-outline-primary fw-bolder"/>
+    </div>
+</form>
+<hr />
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function openForm() {
+        document.getElementById("myForm").style.display = "block";
+        document.getElementById("openBtn").style.display = "none";
+    }
+
+    function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+        document.getElementById("openBtn").style.display = "block";
+    }
+</script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
+    <script type="text/javascript" src="~/js/LLM_API/api.js"></script>
+}
