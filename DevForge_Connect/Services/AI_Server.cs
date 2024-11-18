@@ -16,7 +16,7 @@ public class PythonServerHostedService: IHostedService {
 			string parentDirectory = Directory.GetParent(currentDirectory)?.FullName;
 
 			// Define the path to the virtual environment folder
-			string virtualEnvPath = Path.Combine(parentDirectory, "AI_LLM_Analysis", "test_venv", "Scripts");
+			string virtualEnvPath = Path.Combine(parentDirectory, "AI_LLM_Analysis", "venv", "Scripts");
 
 			// Set the working directory to the AI_LLM_Analysis folder
 			string workingDirectory = Path.Combine(parentDirectory, "AI_LLM_Analysis");
@@ -27,10 +27,15 @@ public class PythonServerHostedService: IHostedService {
 			// Define the FastAPI command to run from the AI_LLM_Analysis folder
 			string fastapiCommand = "uvicorn main:app --reload";
 
+             // Define the Python commands
+            string createVenvCommand = $"python -m venv venv";
+            string installRequirementsCommand = $"pip install -r requirements.txt";
+            string runServer = "fastapi dev main.py";
+
             ProcessStartInfo psi = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = $"/K {venvActivateCommand} && {fastapiCommand}",  //K to allow command prompt to stay open
+                Arguments = $"/K {createVenvCommand} && {venvActivateCommand} && {installRequirementsCommand} && {runServer} && {fastapiCommand}",  //K to allow command prompt to stay open
                 UseShellExecute = false,                 //used to make python server a subprocess of whole program
                 CreateNoWindow = false,                  //show command prompt
                 WorkingDirectory = workingDirectory

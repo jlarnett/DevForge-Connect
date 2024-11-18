@@ -1,9 +1,12 @@
 import google.generativeai as genai
-
+from dotenv import load_dotenv
 import os
 
-#Configure this to be run from a environment variable
-genai.configure(api_key=os.environ["GEMENI_API_KEY"])
+# Load environment variables from the .env file
+load_dotenv()
+
+# Now you can access the API key directly from the environment variables
+genai.configure(api_key=os.getenv("GEMENI_API_KEY"))
 
 
 

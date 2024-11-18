@@ -65,7 +65,7 @@ namespace DevForge_Connect.Migrations
                 {
                     table.PrimaryKey("PK_Statuses", x => x.Id);
                 });
-            migrationBuilder.InsertData(table: "Statuses", column: "Description", value: "Pending Review");
+            migrationBuilder.InsertData(table: "Statuses", column: "Description", value: "Submitted");
             migrationBuilder.InsertData(table: "Statuses", column: "Description", value: "Under Review");
             migrationBuilder.InsertData(table: "Statuses", column: "Description", value: "Accepted");
 
