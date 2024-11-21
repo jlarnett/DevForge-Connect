@@ -3,7 +3,7 @@ import google.generativeai as genai
 import os
 
 #Configure this to be run from a environment variable
-genai.configure(api_key=os.environ["GEMENI_API_KEY"])
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 
 

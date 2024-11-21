@@ -1,39 +1,39 @@
 ﻿"use strict";
 
-var miniConnection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+var mainConnection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 // Disable send button until connection is established
-document.getElementById("ExperimentalSendChat").disabled = true;
+document.getElementById("sendButton").disabled = true;
 
 // Receive message
-miniConnection.on("ReceiveMessage", function (user, message) {
+mainConnection.on("ReceiveMessage", function (user, message) {
     var msg = sanitizeMessage(message);
     var time = getCurrentTime();
 
     var encodedMsg = `
-        <div class='border border-light rounded-4 m-1 p-1'>
+        <div class='border border-primary rounded-4 m-1 p-1'>
             <p><strong>${user}</strong> <span class='messageTime'>${time}</span><hr></p>
             <p>${msg}</p>
         </div>`;
-    appendMessage("experimentalChat", encodedMsg);
+    appendMessage("messages", encodedMsg);
 });
 
 // Chat hub connection established
-miniConnection.start().then(function () {
-    document.getElementById("ExperimentalSendChat").disabled = false;
-    sendBotMessage("Hello! Feel free to ask any questions in this popup chat!");
+mainConnection.start().then(function () {
+    document.getElementById("sendButton").disabled = false;
+    sendBotMessage("Hello! Please feel free to use this Gemini chat bot to flush out your project requirements.");
 }).catch(handleError);
 
 // Send button click event
-document.getElementById("ExperimentalSendChat").addEventListener("click", function (event) {
-    handleSendMessage(miniConnection, "ExperimentalInput", "experimentalChat");
+document.getElementById("sendButton").addEventListener("click", function (event) {
+    handleSendMessage(mainConnection, "messageInput", "messages");
     event.preventDefault();
 });
 
 // Key up event to trigger send on Enter
-document.getElementById("ExperimentalInput").addEventListener("keyup", function (event) {
+document.getElementById("messageInput").addEventListener("keyup", function (event) {
     if (event.keyCode === 13) {
-        document.getElementById("ExperimentalSendChat").click();
+        document.getElementById("sendButton").click();
     }
     event.preventDefault();
 });
@@ -57,11 +57,11 @@ function appendMessage(containerId, message) {
 function sendBotMessage(botMessage) {
     var time = getCurrentTime();
     var encodedMsg = `
-        <div class='border border-light rounded-4 m-1 p-1'>
+        <div class='border border-primary rounded-4 m-1 p-1'>
             <p><strong>Chat Bot</strong> <span class='messageTime'>${time}</span><hr></p>
             <p>${botMessage}</p>
         </div>`;
-    appendMessage("experimentalChat", encodedMsg);
+    appendMessage("messages", encodedMsg);
 }
 
 function handleSendMessage(connection, inputId, containerId) {
