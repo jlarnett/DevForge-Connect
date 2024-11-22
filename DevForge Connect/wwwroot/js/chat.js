@@ -21,7 +21,7 @@ miniConnection.on("ReceiveMessage", function (user, message) {
 // Chat hub connection established
 miniConnection.start().then(function () {
     document.getElementById("ExperimentalSendChat").disabled = false;
-    sendBotMessage("Hello! Feel free to ask any questions in this popup chat!");
+    sendBotMessage("Hello! Feel free to ask any questions in this chat!");
 }).catch(handleError);
 
 // Send button click event
