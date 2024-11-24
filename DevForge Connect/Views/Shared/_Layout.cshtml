@@ -52,7 +52,11 @@
                                     <a class="nav-link text-light" asp-area="" asp-controller="UserTeams" asp-action="Index">User Teams</a>
                                 </li>
 
+                          
+
                             }
+
+                            
 
                             if(User.IsInRole("admin") || User.IsInRole("developer"))
                             {
@@ -158,6 +162,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Dashboard", "Administration")">Dashboard</a>
                             </li>
                         }
                     </ul>
