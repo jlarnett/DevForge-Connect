@@ -1,10 +1,10 @@
-﻿
+﻿﻿
 @model DevForge_Connect.Entities.ProjectSubmission
 
 @{
     ViewData["Title"] = "Create";
 }
-<style>    
+<style>
     .open-button {
         background-color: #555;
         color: white;
@@ -32,70 +32,70 @@
         padding: 10px;
         background-color: lightgrey;
 </style>
-<button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+
 <div class="container-fluid bg-secondary">
     <h2 class="text-center">Generate Project Information</h2>
 
     <hr />
-    
-    <form asp-action="ModifyProjectTitle" class="bg-secondary">
-    <div class="row p-1 bg-secondary">
 
-        <div class="col-3 bg-primary rounded-3 me-2 border border-black border-2 p-4 shadow">
-            <p class="text-light border-bottom mb-5">- The chatbot can be used to flesh out project details and get more information about unknown tech stacks</p>
-            <p class="text-light border-bottom">- Try to enter as much information as possible before moving on. This will save you time later on.</p>
-        </div>
-        @Html.HiddenFor(p => p.Title)
-        @Html.HiddenFor(p => p.Description)
-        @Html.HiddenFor(p => p.Deadline)
-        @Html.HiddenFor(p => p.Funding)
-        @Html.HiddenFor(p => p.TeamId)
-        @Html.HiddenFor(p => p.creatorId)
-        <div class="col-6 border border-black border-2 rounded-3 bg-dark shadow p-2">
-                <div class="container-fluid">
-                    <div class="row d-flex overflow-auto" id="experimentalChat" style="height: 500px;">
-                </div>
-                <div class="row">
-                    <div class="form-group col-9 p-0">
-                        <textarea class="form-control bg-dark text-light" type="text" style="height: 20px;" id="ExperimentalInput"></textarea>
-                        <span class="text-danger"></span>
-                    </div>
-                    <btn class="btn btn-dark col-3" id="ExperimentalSendChat">
-                        Talk to Gemini
-                    </btn>
-                </div>
+    <form asp-action="ModifyProjectTitle" class="bg-secondary" id="projectform">
+        <div class="row p-1 bg-secondary">
+
+            <div class="col-3 bg-primary rounded-3 me-2 border border-black border-2 p-4 shadow">
+                <p class="text-light border-bottom mb-5">- The chatbot can be used to flesh out project details and get more information about unknown tech stacks</p>
+                <p class="text-light border-bottom">- Try to enter as much information as possible before moving on. This will save you time later on.</p>
             </div>
+            @Html.HiddenFor(p => p.Title)
+            @Html.HiddenFor(p => p.Description)
+            @Html.HiddenFor(p => p.Deadline)
+            @Html.HiddenFor(p => p.Funding)
+            @Html.HiddenFor(p => p.TeamId)
+            @Html.HiddenFor(p => p.creatorId)
+            <div class="col-6 border border-black border-2 rounded-3 bg-dark shadow p-2">
+                <div class="container-fluid">
+                    <div class="row d-flex overflow-auto overflow-y-scroll" id="experimentalChat" style="height: 700px;">
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-9 p-0">
+                            <textarea class="form-control bg-dark text-light" type="text" style="height: 20px;" id="ExperimentalInput"></textarea>
+                            <span class="text-danger"></span>
+                        </div>
+                        <btn class="btn btn-dark col-3" id="ExperimentalSendChat">
+                            Talk to Gemini
+                        </btn>
+                    </div>
+                </div>
 
-            
-            <div class="chat-popup form-container" id="myForm">
-                <h1>Chat Bot</h1>
-                <div class="overflow-auto" style="max-height: 400px;">
-                    <div id="messages" style="overflow-anchor:none"></div>
+                <div class="chat-popup form-container" id="myForm">
+                    <h1>Chat Bot</h1>
+                    <div class="overflow-auto" style="max-height: 400px;">
+                        <div id="messages" style="overflow-anchor:none"></div>
 
-                    <hr/>
+                        <hr />
 
-                    <div class="input-group mb-3">
-                        <input type="text" id="messageInput" class="form-control" placeholder="Send message"/>
+                        <div class="input-group mb-3">
+                            <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
 
-                        <div class="input-group-append">
-                            <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
-                            <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+                            <div class="input-group-append">
+                                <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-2"></div>
         </div>
-        <div class="col-2"></div>
-    </div>
-    <div class="form-group row p-3">
-        <input type="submit" value="Submit Project Idea" class="col btn btn-outline-primary fw-bolder"/>
-    </div>
-</form>
-<hr />
+        <div class="form-group row p-3">
+            <input value="Submit Project Idea" id="SubmitAIProjectButton" class="col btn btn-outline-primary fw-bolder" />
+        </div>
+    </form>
+    <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+    <hr />
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 
@@ -113,7 +113,9 @@
     }
 </script>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/chat.js"></script>
     <script type="text/javascript" src="~/js/LLM_API/api.js"></script>

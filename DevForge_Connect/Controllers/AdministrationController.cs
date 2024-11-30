@@ -49,4 +49,11 @@ public class AdministrationController : Controller
 
         return View(model);
     }
+
+
+    public IActionResult Dashboard()
+    {
+        return View(); // This will look for a Dashboard.cshtml in Views/Home
+    }
+
 }
