@@ -12,8 +12,8 @@ public class PythonServerHostedService: IHostedService {
         try {
 			string currentDirectory = Directory.GetCurrentDirectory();
 
-			// Move up one folder to the parent directory
-			string parentDirectory = Directory.GetParent(currentDirectory)?.FullName;
+            // Move up one folder to the parent directory
+            string parentDirectory = Directory.GetParent(currentDirectory)?.FullName;
 
 			// Define the path to the virtual environment folder
 			string virtualEnvPath = Path.Combine(parentDirectory, "AI_LLM_Analysis", "venv", "Scripts");
@@ -35,7 +35,7 @@ public class PythonServerHostedService: IHostedService {
             ProcessStartInfo psi = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = $"/K {createVenvCommand} && {venvActivateCommand} && {installRequirementsCommand} && {runServer} && {fastapiCommand}",  //K to allow command prompt to stay open
+                Arguments = $"/K {"cd"} && {createVenvCommand} && {venvActivateCommand} && {installRequirementsCommand} && {runServer} && {fastapiCommand}",  //K to allow command prompt to stay open
                 UseShellExecute = false,                 //used to make python server a subprocess of whole program
                 CreateNoWindow = false,                  //show command prompt
                 WorkingDirectory = workingDirectory

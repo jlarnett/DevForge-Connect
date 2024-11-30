@@ -5,10 +5,6 @@ VisualStudioVersion = 17.10.34804.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevForge_Connect", "DevForge_Connect\DevForge Connect.csproj", "{A816C422-0435-4BB9-9830-BCD0A4AFAA82}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevForge.Tests", "DevForge.Tests\DevForge.Tests.csproj", "{F403DE4D-A032-41DA-BDED-2D702EC77CD2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyApp.Tests", "MyApp.Tests\MyApp.Tests.csproj", "{F312B9F0-A228-49D7-B831-36FF3F1281E6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

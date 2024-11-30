@@ -10,6 +10,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using DevForge_Connect.Data;
+using DevForge_Connect.Entities;
 using DevForge_Connect.Entities.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -18,12 +20,14 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace DevForge_Connect.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
+        private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
@@ -38,7 +42,8 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -47,6 +52,7 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _context = context;
 
         }
 
@@ -180,7 +186,25 @@ namespace DevForge_Connect.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        var userProfile = await _context.UserProfile.Include(u => u.User).FirstOrDefaultAsync(u => u.UserId == userId);
+                        if (userProfile == null)
+                        {
+                            var default_PFP_Path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "default-pfp.jpeg");
+                            byte[] defaultPFP = System.IO.File.ReadAllBytes(default_PFP_Path);
+
+                            userProfile = new UserProfile
+                            {
+                                UserId = userId,
+                                Bio = "",
+                                Expirience = "",
+                                ProfilePicture = defaultPFP
+                            };
+
+                            _context.UserProfile.Add(userProfile);
+                            await _context.SaveChangesAsync();
+
+                        }
+                        return RedirectToAction("Edit","UserProfiles", new {id = userProfile.Id});
                     }
                 }
                 foreach (var error in result.Errors)

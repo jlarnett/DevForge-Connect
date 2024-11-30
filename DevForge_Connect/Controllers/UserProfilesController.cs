@@ -33,7 +33,7 @@ namespace DevForge_Connect.Controllers
         // GET: UserProfiles
         public async Task<IActionResult> Index()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = _userManager.GetUserId(User);
 
             if (userId == null)
             {
@@ -104,7 +104,7 @@ namespace DevForge_Connect.Controllers
         public async Task<IActionResult> Create([Bind("Id,UserId,Bio,Expirience,ProfilePicture")] UserProfile userProfile, IFormFile profilePicture)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-
+            var userId = _userManager.GetUserId(User);
             if (currentUser != null)
                 userProfile.UserId = currentUser.Id;
 

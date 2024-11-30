@@ -10,9 +10,8 @@ connection.on("ReceiveMessage", function (user, message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     var today = new Date();
-    if (today.getMinutes() < 9) { var time = today.getHours() + ":0" + today.getMinutes(); }
+    if (today.getMinutes() < 10) { var time = today.getHours() + ":0" + today.getMinutes(); }
     else {var time = today.getHours() + ":" + today.getMinutes(); }
-    
     var encodedMsg = "<div class='border border-primary rounded-4 m-1 p-1'><p><strong>    " + user + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + msg + "</p></div>";
     var element = document.createElement("div");
     element.innerHTML = encodedMsg;
@@ -25,6 +24,8 @@ connection.on("ReceiveMessage", function (user, message) {
     experimentalElement.classList.add("row");
     experimentalElement.innerHTML = encodedMsg;
     document.getElementById("experimentalChat").appendChild(experimentalElement);
+    const chatContainer = document.getElementById("experimentalChat");
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 });
 
 // Chat hub connection established
@@ -54,18 +55,23 @@ connection.start().then(function () {
 document.getElementById("sendButton").addEventListener("click", function (event) {
     var message = document.getElementById("messageInput").value;
 
-    if (message.trim() !== "") {
-        connection.invoke("SendMessage", message).catch(function (err) {
-            return console.error(err.toString());
-        });
-        var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        SendMessageGemini(msg);
+    if (message !== "") {
+        const msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        (async () => {
+            try {
+                await connection.invoke("SendMessage", message); 
+                SendMessageGemini(msg); 
+            } catch (err) {
+                console.error(err.toString());
+            }
+        })();
     }
     else {
         var today = new Date();
-        if (today.getMinutes() < 9) { var time = today.getHours() + ":0" + today.getMinutes(); }
+        if (today.getMinutes() < 10) { var time = today.getHours() + ":0" + today.getMinutes(); }
         else { var time = today.getHours() + ":" + today.getMinutes(); }
-
+        
         var encodedMsg = "<div class='border border-primary rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + "Message can not be blank." + "</p></div>";
         var element = document.createElement("div");
         element.innerHTML = encodedMsg;
@@ -75,10 +81,12 @@ document.getElementById("sendButton").addEventListener("click", function (event)
         //Experimental ChatBot Window Located next to Project Submission Form
         //Just seperating out the different UIs so they don't mess with each other
         var encodedMsg = "<div class='border border-light rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + "Message can not be blank." + "</p></div>";
-        var experimentalElement = element.cloneNode(true);
+       var experimentalElement = element.cloneNode(true);
         experimentalElement.innerHTML = encodedMsg;
         experimentalElement.classList.add("row");
         document.getElementById("experimentalChat").appendChild(experimentalElement);
+        const chatContainer = document.getElementById("experimentalChat");
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
     document.getElementById("messageInput").value = "";
@@ -90,18 +98,23 @@ document.getElementById("ExperimentalSendChat").addEventListener("click", functi
     var message = document.getElementById("ExperimentalInput").value;
 
     if (message.trim() !== "") {
-        connection.invoke("SendMessage", message).catch(function (err) {
-            return console.error(err.toString());
-        });
-        var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        SendMessageGemini(msg);
+        const msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+   
+        (async () => {
+            try {
+                await connection.invoke("SendMessage", message); 
+                SendMessageGemini(msg); 
+            } catch (err) {
+                console.error(err.toString());
+            }
+        })();
     }
     else {
         var today = new Date();
         if (today.getMinutes() < 9) { var time = today.getHours() + ":0" + today.getMinutes(); }
         else { var time = today.getHours() + ":" + today.getMinutes(); }
-
-        var encodedMsg = "<div class='border border-primary rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + "Message can not be blank." + "</p></div>";
+        
+        var encodedMsg = "<div class='border border-primary rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + "Message can not be blank or is too short." + "</p></div>";
         var element = document.createElement("div");
         element.innerHTML = encodedMsg;
         document.getElementById("messages").appendChild(element);
@@ -109,11 +122,13 @@ document.getElementById("ExperimentalSendChat").addEventListener("click", functi
         
         //Experimental ChatBot Window Located next to Project Submission Form
         //Just seperating out the different UIs so they don't mess with each other
-        var encodedMsg = "<div class='border border-light rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + "Message can not be blank." + "</p></div>";
+        var encodedMsg = "<div class='border border-light rounded-4 m-1 p-1'><p><strong>" + "    Chat Bot" + "</strong> <span class='messageTime'>" + time + "</span><hr></p><p>    " + "Message can not be blank or is too short." + "</p></div>";
         var experimentalElement = element.cloneNode(true);
         experimentalElement.innerHTML = encodedMsg;
         experimentalElement.classList.add("row");
         document.getElementById("experimentalChat").appendChild(experimentalElement);
+        const chatContainer = document.getElementById("experimentalChat");
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
     document.getElementById("ExperimentalInput").value = "";
