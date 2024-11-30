@@ -13,9 +13,24 @@
     }); 
 });
 function SendMessageGemini(message) {
+    var loadingMsg = "<div class='border border-primary rounded-4 m-1 p-1' id='loadingMessage'><p><strong>    Chat Bot</strong> <span class='messageTime'></span><hr></p><p>    Processing your message...</p></div>";
+    var element = document.createElement("div");
+    element.innerHTML = loadingMsg;
+    document.getElementById("messages").appendChild(element);
+
+    var loadingSpinner = "<div id='load' class='spinner-border' role='status'> <span class='sr-only'></span></div>";
+    var experimentalElement = document.createElement("div");
+    experimentalElement.innerHTML = loadingSpinner;
+    experimentalElement.classList.add("row");
+    document.getElementById("experimentalChat").appendChild(experimentalElement);
+    const chatContainer = document.getElementById("experimentalChat");
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
     fetch("http://127.0.0.1:8000/genResponse?text=" + message)
         .then(response => {
             if (!response.ok) {
+                document.getElementById("loadingMessage").remove();
+                document.getElementById("load").remove()
                 //When we receive a not ok network response from FastAPI Server
                 var today = new Date();
                 if (today.getMinutes() < 9) { var time = today.getHours() + ":0" + today.getMinutes(); }
@@ -33,12 +48,16 @@ function SendMessageGemini(message) {
                 experimentalElement.innerHTML = encodedMsg;
 
                 document.getElementById("experimentalChat").appendChild(experimentalElement);
+                const chatContainer = document.getElementById("experimentalChat");
+                chatContainer.scrollTop = chatContainer.scrollHeight;
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
         })
         .then(data => {
             //What happens when the response is returned successfully from FastAPI Server
+            document.getElementById("loadingMessage").remove();
+            document.getElementById("load").remove()
             var today = new Date();
             if (today.getMinutes() < 9) { var time = today.getHours() + ":0" + today.getMinutes(); }
             else { var time = today.getHours() + ":" + today.getMinutes(); }
@@ -47,6 +66,8 @@ function SendMessageGemini(message) {
             var element = document.createElement("div");
             element.innerHTML = encodedMsg;
             document.getElementById("messages").appendChild(element);
+            const chatContainer = document.getElementById("experimentalChat");
+            chatContainer.scrollTop = chatContainer.scrollHeight;
 
             const summarizedProjectJson2 = data.split("```");
 
@@ -102,12 +123,16 @@ function SendMessageGemini(message) {
             var experimentalElement = element.cloneNode(true);
             experimentalElement.innerHTML = encodedMsg;
             experimentalElement.classList.add("row");
-
+            
             if (data.length > 0) {
                 document.getElementById("experimentalChat").appendChild(experimentalElement);
+                const chatContainer = document.getElementById("experimentalChat");
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         })
         .catch(error => {
+            document.getElementById("loadingMessage").remove();
+            document.getElementById("load").remove()
             var today = new Date();
             if (today.getMinutes() < 9) { var time = today.getHours() + ":0" + today.getMinutes(); }
             else { var time = today.getHours() + ":" + today.getMinutes(); }
@@ -122,6 +147,8 @@ function SendMessageGemini(message) {
             experimentalElement.innerHTML = encodedMsg;
             experimentalElement.classList.add("row");
             document.getElementById("experimentalChat").appendChild(experimentalElement);
+            const chatContainer = document.getElementById("experimentalChat");
+            chatContainer.scrollTop = chatContainer.scrollHeight;
             console.error('Fetch error:', error);
         })
 }

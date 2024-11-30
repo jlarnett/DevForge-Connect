@@ -32,7 +32,7 @@
         padding: 10px;
         background-color: lightgrey;
 </style>
-
+<button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
 <div class="container-fluid bg-secondary">
     <h2 class="text-center">Generate Project Information</h2>
 
@@ -52,8 +52,8 @@
         @Html.HiddenFor(p => p.TeamId)
         @Html.HiddenFor(p => p.creatorId)
         <div class="col-6 border border-black border-2 rounded-3 bg-dark shadow p-2">
-            <div class="container-fluid">
-                <div class="row d-flex overflow-auto overflow-y-scroll" id="experimentalChat" style="height: 700px;">
+                <div class="container-fluid">
+                    <div class="row d-flex overflow-auto" id="experimentalChat" style="height: 500px;">
                 </div>
                 <div class="row">
                     <div class="form-group col-9 p-0">
@@ -66,7 +66,7 @@
                 </div>
             </div>
 
-            <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+            
             <div class="chat-popup form-container" id="myForm">
                 <h1>Chat Bot</h1>
                 <div class="overflow-auto" style="max-height: 400px;">
