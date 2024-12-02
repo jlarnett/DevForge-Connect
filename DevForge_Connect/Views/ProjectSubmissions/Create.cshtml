@@ -66,6 +66,42 @@
         outline: none;
     }
 
+    .form-container input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .form-container button {
+        width: 100%;
+    }
+
+    .chat-popup {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 15px;
+        width: 300px;
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        color: #333;
+        z-index: 1000;
+    }
+
+    .form-container {
+        padding: 15px;
+        color: #333;
+    }
+
+    #messageInput {
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 8px;
+    }
+
     button, .btn {
         background-color: #007bff;
         color: #fff;
@@ -76,39 +112,28 @@
         transition: background-color 0.3s;
     }
 
-    button:hover, .btn:hover {
-        background-color: #0056b3;
+        button:hover, .btn:hover {
+            background-color: #0056b3;
+        }
+
+    #sendButton, .btn-secondary {
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-weight: bold;
     }
 
-    .chat-popup {
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        right: 15px;
-        width: 300px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
 
-    .form-container {
-        padding: 15px;
-        border-radius: 10px;
-        color: #fff;
-    }
-
-    .form-container input {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .form-container button {
-        width: 100%;
-    }
+        .btn-secondary:hover {
+            background-color: #6c757d;
+        }
 
     .open-button {
         position: fixed;
         bottom: 20px;
-        right: 30px;
+        right: 15px;
         background-color: #007bff;
         color: white;
         border: none;
@@ -117,11 +142,12 @@
         font-size: 14px;
         cursor: pointer;
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
     }
 
-    .open-button:hover {
-        background-color: #0056b3;
-    }
+        .open-button:hover {
+            background-color: #0056b3;
+        }
 </style>
 
 <div class="container-fluid bg-light">
@@ -155,25 +181,7 @@
                             Talk to Gemini
                         </btn>
                     </div>
-                </div>
-
-                <div class="chat-popup form-container" id="myForm">
-                    <h1>Chat Bot</h1>
-                    <div class="overflow-auto" style="max-height: 400px;">
-                        <div id="messages" style="overflow-anchor:none"></div>
-
-                        <hr />
-
-                        <div class="input-group mb-3">
-                            <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
-
-                            <div class="input-group-append">
-                                <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
-                                <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </div>                
             </div>
             <div class="col-2"></div>
         </div>
@@ -181,11 +189,30 @@
             <input type="submit" value="Submit Project Idea" id="SubmitAIProjectButton" class="col btn btn-outline-primary fw-bolder" />
         </div>
     </form>
-    <button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+    
     <hr />
 
     <div>
         <a asp-action="Index">Back to List</a>
+    </div>
+</div>
+
+<button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+<div class="chat-popup form-container" id="myForm">
+    <h1>Chat Bot</h1>
+    <div class="overflow-auto" style="max-height: 400px;">
+        <div id="messages" style="overflow-anchor:none"></div>
+
+        <hr />
+
+        <div class="input-group mb-3">
+            <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
+
+            <div class="input-group-append">
+                <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
+                <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
