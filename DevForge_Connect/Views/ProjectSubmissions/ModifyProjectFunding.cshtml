@@ -4,35 +4,81 @@
 @{
     ViewData["Title"] = "Modify Title";
 }
-<style>    
-    .open-button {
-        background-color: #555;
-        color: white;
-        padding: 16px 20px;
-        border: none;
-        cursor: pointer;
-        opacity: 0.8;
-        position: fixed;
-        bottom: 23px;
-        right: 28px;
-        width: 280px;
-    }
-
+<style>
     .chat-popup {
         display: none;
         position: fixed;
-        bottom: 0;
+        bottom: 20px;
         right: 15px;
-        border: 3px solid black;
-        z-index: 9;
+        width: 300px;
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        color: #333;
+        z-index: 1000;
     }
 
     .form-container {
-        max-width: 400px;
-        padding: 10px;
-        background-color: lightgrey;
-</style>
+        padding: 15px;
+        color: #333;
+    }
 
+    #messageInput {
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 8px;
+    }
+
+    button, .btn {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+        button:hover, .btn:hover {
+            background-color: #0056b3;
+        }
+
+    #sendButton, .btn-secondary {
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-weight: bold;
+    }
+
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary:hover {
+            background-color: #6c757d;
+        }
+
+    .open-button {
+        position: fixed;
+        bottom: 20px;
+        right: 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+    }
+
+        .open-button:hover {
+            background-color: #0056b3;
+        }
+</style>
 
 <hr />
 <form asp-action="ModifyProjectTeam">
@@ -63,6 +109,25 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<button id="openBtn" class="open-button" onclick="openForm()">Project Assistant</button>
+<div class="chat-popup form-container" id="myForm">
+    <h1>Chat Bot</h1>
+    <div class="overflow-auto" style="max-height: 400px;">
+        <div id="messages" style="overflow-anchor:none"></div>
+
+        <hr />
+
+        <div class="input-group mb-3">
+            <input type="text" id="messageInput" class="form-control" placeholder="Send message" />
+
+            <div class="input-group-append">
+                <button type="submit" id="sendButton" class="btn btn-primary">Send</button>
+                <button type="button" class="btn btn-secondary" onclick="closeForm()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function openForm() {
         document.getElementById("myForm").style.display = "block";
@@ -77,6 +142,6 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/chat.js"></script>
+    <script src="~/js/miniChat.js"></script>
     <script type="text/javascript" src="~/js/LLM_API/api.js"></script>
 }
