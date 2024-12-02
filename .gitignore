@@ -365,3 +365,5 @@ FodyWeavers.xsd
 #Virutal environment
 AI_LLM_ANALYSIS/venv
 AI_LLM_ANALYSIS/test_venv
+/AI_LLM_Analysis/.env
+/DevForge_Connect/.env
